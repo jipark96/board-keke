@@ -4,9 +4,7 @@ import static com.example.board.common.response.BaseResponseStatus.*;
 import static com.example.board.utils.ValidationRegex.*;
 
 import com.example.board.common.response.BaseResponse;
-import com.example.board.user.dto.GetUserDto;
-import com.example.board.user.dto.JoinRequestDto;
-import com.example.board.user.dto.JoinResponseDto;
+import com.example.board.user.dto.*;
 import com.example.board.user.service.UserService;
 import com.example.board.utils.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -26,7 +24,7 @@ public class UserController {
 
     /**
      * 회원가입 API
-     * [POST] /users
+     * [POST] /user
      */
     @ResponseBody
     @PostMapping("")
@@ -44,7 +42,7 @@ public class UserController {
 
     /**
      * 회원조회 API
-     * [GET] /users
+     * [GET] /user
      */
     @ResponseBody
     @GetMapping("")
@@ -53,5 +51,15 @@ public class UserController {
         return new BaseResponse<>(getUserDto);
     }
 
+    /**
+     * 로그인 API
+     * [POST] /user/login
+     */
+    @ResponseBody
+    @PostMapping("/login")
+    public BaseResponse<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto) {
+        LoginResponseDto loginResponseDto = userService.loginUser(loginRequestDto);
+        return new BaseResponse<>(loginResponseDto);
+    }
 
 }

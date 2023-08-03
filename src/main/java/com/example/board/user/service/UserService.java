@@ -2,9 +2,7 @@ package com.example.board.user.service;
 
 
 import com.example.board.common.exceptions.BaseException;
-import com.example.board.user.dto.GetUserDto;
-import com.example.board.user.dto.JoinRequestDto;
-import com.example.board.user.dto.JoinResponseDto;
+import com.example.board.user.dto.*;
 import com.example.board.user.entity.User;
 import com.example.board.user.repository.UserRepository;
 import com.example.board.utils.JwtService;
@@ -54,6 +52,22 @@ public class UserService {
                 .map(GetUserDto::new)
                 .collect(Collectors.toList());
         return getUserDtoList;
+    }
+
+    //[로그인]
+    public LoginResponseDto loginUser(LoginRequestDto loginRequestDto) {
+        User user = userRepository.findByUsernameAndState(loginRequestDto.getUsername(), ACTIVE)
+                .orElseThrow(() -> new BaseException(NOT_FIND_USER));
+
+        if(!user.getPassword().equals(loginRequestDto.getPassword())) {
+            throw new BaseException(FAILED_TO_PASSWORD);
+        }
+        String jwtToken = jwtService.createJwt(user.getId());
+
+        return LoginResponseDto.builder()
+                .id(user.getId())
+                .jwtToken(jwtToken)
+                .build();
     }
 
 }
