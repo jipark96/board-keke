@@ -13,6 +13,7 @@ public class JoinResponseDto {
     private String email;
     private String username;
     private String name;
+    private String jwtToken;
 
     public static JoinResponseDto of (User user){
         return JoinResponseDto
