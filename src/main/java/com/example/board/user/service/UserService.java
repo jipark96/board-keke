@@ -2,6 +2,7 @@ package com.example.board.user.service;
 
 
 import com.example.board.common.exceptions.BaseException;
+import com.example.board.user.dto.GetUserDto;
 import com.example.board.user.dto.JoinRequestDto;
 import com.example.board.user.dto.JoinResponseDto;
 import com.example.board.user.entity.User;
@@ -11,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.example.board.common.entity.BaseEntity.State.ACTIVE;
 import static com.example.board.common.response.BaseResponseStatus.*;
@@ -42,6 +45,15 @@ public class UserService {
                 .name(saveUser.getName())
                 .jwtToken(jwtToken)
                 .build();
+    }
+
+    //[회원 조회]
+    @Transactional(readOnly = true)
+    public List<GetUserDto> getUsers() {
+        List<GetUserDto> getUserDtoList = userRepository.findByState(ACTIVE).stream()
+                .map(GetUserDto::new)
+                .collect(Collectors.toList());
+        return getUserDtoList;
     }
 
 }

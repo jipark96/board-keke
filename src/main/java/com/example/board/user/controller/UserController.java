@@ -4,6 +4,7 @@ import static com.example.board.common.response.BaseResponseStatus.*;
 import static com.example.board.utils.ValidationRegex.*;
 
 import com.example.board.common.response.BaseResponse;
+import com.example.board.user.dto.GetUserDto;
 import com.example.board.user.dto.JoinRequestDto;
 import com.example.board.user.dto.JoinResponseDto;
 import com.example.board.user.service.UserService;
@@ -11,6 +12,8 @@ import com.example.board.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -38,5 +41,17 @@ public class UserController {
         return new BaseResponse<>(joinResponseDto);
 
     }
+
+    /**
+     * 회원조회 API
+     * [GET] /users
+     */
+    @ResponseBody
+    @GetMapping("")
+    public BaseResponse<List<GetUserDto>> getUsers() {
+        List<GetUserDto> getUserDto = userService.getUsers();
+        return new BaseResponse<>(getUserDto);
+    }
+
 
 }
