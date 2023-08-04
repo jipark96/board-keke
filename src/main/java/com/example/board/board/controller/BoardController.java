@@ -36,15 +36,20 @@ public class BoardController {
      * 게시판 글 리스트 조회 API
      * [GET] /board
      */
+//    @ResponseBody
+//    @Operation(summary = "글 전체 조회")
+//    @GetMapping("")
+//    public BaseResponse<List<GetBoardDto>> getAllBoard() {
+//        List<GetBoardDto> boardDtoList = boardService.getAllBoard();
+//        return new BaseResponse<>(boardDtoList);
+//    }
+
     @ResponseBody
     @Operation(summary = "글 전체 조회")
     @GetMapping("")
-    public BaseResponse<List<GetBoardDto>> getAllBoard(
-            @RequestParam(defaultValue = "0") int pageNumber,
-            @RequestParam(defaultValue = "8") int pageSize)
-    {
-        List<GetBoardDto> boardDtoList = boardService.getAllBoard(pageNumber, pageSize);
-        return new BaseResponse<>(boardDtoList);
+    public BaseResponse<List<GetBoardDto>> getAllBoard(@RequestParam(required = true) int startPage) {
+        List<GetBoardDto> getBoardDtoList = boardService.getAllBoard(startPage);
+        return new BaseResponse<>(getBoardDtoList);
     }
 
     /**

@@ -35,4 +35,8 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<Board> boardList = new ArrayList<Board>();
+
+    public String getUsername() {
+        return this.username;
+    }
 }

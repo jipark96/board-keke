@@ -21,6 +21,8 @@ public class GetBoardDto {
     private String content;
     private String username;
     private LocalDateTime createdAt;
+
+    private int count;
     private List<String> commentList = new ArrayList<>();
 
     public GetBoardDto(Board board) {
