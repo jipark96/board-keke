@@ -42,4 +42,16 @@ public class BoardController {
         List<GetBoardDto> boardDtoList = boardService.getAllBoard();
         return new BaseResponse<>(boardDtoList);
     }
+
+    /**
+     * 게시판 글 상세 조회 API
+     * [GET] /board/{boardId}
+     */
+    @ResponseBody
+    @Operation(summary = "글 상세 조회")
+    @GetMapping("/{boardId}")
+    public BaseResponse<GetBoardDto> getBoard(@PathVariable("boardId") Long boardId) {
+        GetBoardDto getBoardDto = boardService.getBoard(boardId);
+        return new BaseResponse<>(getBoardDto);
+    }
 }
