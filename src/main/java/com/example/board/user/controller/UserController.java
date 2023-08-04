@@ -7,12 +7,15 @@ import com.example.board.common.response.BaseResponse;
 import com.example.board.user.dto.*;
 import com.example.board.user.service.UserService;
 import com.example.board.utils.JwtService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "user 도메인", description = "회원가입 API, 로그인 API, 유저 정보 조회 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +30,7 @@ public class UserController {
      * [POST] /user
      */
     @ResponseBody
+    @Operation(summary = "회원가입")
     @PostMapping("")
     public BaseResponse<JoinResponseDto> createUser(@RequestBody JoinRequestDto joinRequestDto) {
         if(joinRequestDto.getEmail() == null) {
@@ -45,6 +49,7 @@ public class UserController {
      * [GET] /user
      */
     @ResponseBody
+    @Operation(summary = "회원 전체 조회")
     @GetMapping("")
     public BaseResponse<List<GetUserDto>> getUsers() {
         List<GetUserDto> getUserDto = userService.getUsers();
@@ -56,6 +61,7 @@ public class UserController {
      * [POST] /user/login
      */
     @ResponseBody
+    @Operation(summary = "로그인")
     @PostMapping("/login")
     public BaseResponse<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto) {
         LoginResponseDto loginResponseDto = userService.loginUser(loginRequestDto);

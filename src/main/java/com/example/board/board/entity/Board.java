@@ -1,14 +1,11 @@
 package com.example.board.board.entity;
 
 import com.example.board.common.entity.BaseEntity;
+import com.example.board.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 @Entity
 public class Board extends BaseEntity {
@@ -24,5 +21,22 @@ public class Board extends BaseEntity {
     @Column(name = "board_content", nullable = false)
     private String content;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Builder
+    public Board(Long id, String title, String content, User user) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.user = user;
+        if (user != null) {
+            user.getBoardList().add(this);
+        }
+    }
 }

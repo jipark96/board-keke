@@ -1,8 +1,13 @@
 package com.example.board.user.entity;
 
+import com.example.board.board.entity.Board;
 import com.example.board.common.entity.BaseEntity;
+
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,4 +32,7 @@ public class User extends BaseEntity {
 
     @Column(nullable = false, length = 10)
     private String name;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    List<Board> boardList = new ArrayList<Board>();
 }
