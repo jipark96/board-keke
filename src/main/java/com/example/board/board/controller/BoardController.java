@@ -39,8 +39,11 @@ public class BoardController {
     @ResponseBody
     @Operation(summary = "글 전체 조회")
     @GetMapping("")
-    public BaseResponse<List<GetBoardDto>> getAllBoard() {
-        List<GetBoardDto> boardDtoList = boardService.getAllBoard();
+    public BaseResponse<List<GetBoardDto>> getAllBoard(
+            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "8") int pageSize)
+    {
+        List<GetBoardDto> boardDtoList = boardService.getAllBoard(pageNumber, pageSize);
         return new BaseResponse<>(boardDtoList);
     }
 
@@ -68,5 +71,16 @@ public class BoardController {
         return new BaseResponse<>(patchBoardDto);
     }
 
+    /**
+     * 게시판 삭제
+     * [DELETE] /board/{boardId}
+     */
+    @ResponseBody
+    @Operation(summary = "글 삭제")
+    @DeleteMapping("/{boardId}")
+    public BaseResponse<String> deleteBoard(@PathVariable("boardId") Long boardId) {
 
+        boardService.deleteBoard(boardId);
+        return new BaseResponse<>("삭제 완료");
+    }
 }

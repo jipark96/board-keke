@@ -5,8 +5,10 @@ import com.example.board.board.dto.PatchBoardDto;
 import com.example.board.board.dto.PostBoardDto;
 import com.example.board.board.entity.Board;
 import com.example.board.board.repository.BoardRepository;
-import com.example.board.common.exceptions.BaseException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +29,18 @@ public class BoardService {
     }
 
     //[글 전체 조회]
+//    @Transactional(readOnly = true)
+//    public List<GetBoardDto> getAllBoard() {
+//        return boardRepository.findAll().stream()
+//                .map(GetBoardDto::new)
+//                .collect(Collectors.toList());
+//    }
+
     @Transactional(readOnly = true)
-    public List<GetBoardDto> getAllBoard() {
-        return boardRepository.findAll().stream()
+    public List<GetBoardDto> getAllBoard(int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        Page<Board> boardPage = boardRepository.findAll(pageable);
+        return boardPage.getContent().stream()
                 .map(GetBoardDto::new)
                 .collect(Collectors.toList());
     }
@@ -49,5 +60,13 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
 
         board.updateBoard(patchBoardDto.getTitle(), patchBoardDto.getContent());
+    }
+
+    //[글 삭제]
+    public void deleteBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
+//        board.deleteBoard();
+        boardRepository.delete(board);
     }
 }

@@ -1,9 +1,13 @@
 package com.example.board.board.entity;
 
+import com.example.board.comment.entity.Comment;
 import com.example.board.common.entity.BaseEntity;
 import com.example.board.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -22,8 +26,11 @@ public class Board extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private User user;
+
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    List<Comment> commentList = new ArrayList<Comment>();
 
     public void setUser(User user) {
         this.user = user;
@@ -43,5 +50,14 @@ public class Board extends BaseEntity {
     public void updateBoard(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void deleteBoard() {
+        this.state = State.INACTIVE;
+    }
+
+    public void addComment(Comment comment) {
+        comment.setBoard(this);
+        commentList.add(comment);
     }
 }
