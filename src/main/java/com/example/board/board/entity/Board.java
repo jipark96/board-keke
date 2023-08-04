@@ -39,4 +39,9 @@ public class Board extends BaseEntity {
             user.getBoardList().add(this);
         }
     }
+
+    public void updateBoard(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

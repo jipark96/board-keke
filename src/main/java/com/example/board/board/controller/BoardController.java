@@ -1,6 +1,7 @@
 package com.example.board.board.controller;
 
 import com.example.board.board.dto.GetBoardDto;
+import com.example.board.board.dto.PatchBoardDto;
 import com.example.board.board.dto.PostBoardDto;
 import com.example.board.board.service.BoardService;
 import com.example.board.common.response.BaseResponse;
@@ -54,4 +55,18 @@ public class BoardController {
         GetBoardDto getBoardDto = boardService.getBoard(boardId);
         return new BaseResponse<>(getBoardDto);
     }
+
+    /**
+     * 게시판 수정
+     * [PATCH] /board/{boardId}
+     */
+    @ResponseBody
+    @Operation(summary = "글 수정")
+    @PatchMapping("/{boardId}")
+    public BaseResponse<PatchBoardDto> updateBoard(@PathVariable("boardId") Long boardId, @RequestBody PatchBoardDto patchBoardDto) {
+        boardService.updateBoard(boardId, patchBoardDto);
+        return new BaseResponse<>(patchBoardDto);
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.board.board.service;
 
 import com.example.board.board.dto.GetBoardDto;
+import com.example.board.board.dto.PatchBoardDto;
 import com.example.board.board.dto.PostBoardDto;
 import com.example.board.board.entity.Board;
 import com.example.board.board.repository.BoardRepository;
@@ -34,10 +35,19 @@ public class BoardService {
     }
 
     //[글 상세 조회]
+    @Transactional(readOnly = true)
     public GetBoardDto getBoard(Long boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
         return new GetBoardDto(board);
 
+    }
+
+    //[글 수정]
+    public void updateBoard(Long boardId, PatchBoardDto patchBoardDto) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
+
+        board.updateBoard(patchBoardDto.getTitle(), patchBoardDto.getContent());
     }
 }
