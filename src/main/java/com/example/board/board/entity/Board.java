@@ -26,11 +26,14 @@ public class Board extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     List<Comment> commentList = new ArrayList<Comment>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    List<BoardImg> boardImgList;
 
     public void setUser(User user) {
         this.user = user;
