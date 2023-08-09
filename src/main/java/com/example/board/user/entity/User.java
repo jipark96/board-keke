@@ -33,7 +33,7 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 10)
     private String name;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Board> boardList = new ArrayList<Board>();
 
     public String getUsername() {

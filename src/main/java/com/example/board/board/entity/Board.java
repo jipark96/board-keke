@@ -32,9 +32,6 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     List<Comment> commentList = new ArrayList<Comment>();
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    List<BoardImg> boardImgList;
-
     public void setUser(User user) {
         this.user = user;
     }

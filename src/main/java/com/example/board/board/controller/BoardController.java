@@ -5,6 +5,7 @@ import com.example.board.board.dto.PatchBoardDto;
 import com.example.board.board.dto.PostBoardDto;
 import com.example.board.board.service.BoardService;
 import com.example.board.common.response.BaseResponse;
+import com.example.board.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -66,11 +67,11 @@ public class BoardController {
 
     /**
      * 게시판 수정
-     * [PATCH] /board/{boardId}
+     * [PATCH] /board/edit/{boardId}
      */
     @ResponseBody
     @Operation(summary = "글 수정")
-    @PatchMapping("/{boardId}")
+    @PatchMapping("/edit/{boardId}")
     public BaseResponse<PatchBoardDto> updateBoard(@PathVariable("boardId") Long boardId, @RequestBody PatchBoardDto patchBoardDto) {
         boardService.updateBoard(boardId, patchBoardDto);
         return new BaseResponse<>(patchBoardDto);

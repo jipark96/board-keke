@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PostCommentDto {
     private Long boardId;
+    private Long userId;
     private String content;
 
     public Comment toEntity(Board board) {

@@ -35,4 +35,5 @@ public class GetBoardDto {
             this.commentList.add(comment.getContent());
         }
     }
+
 }

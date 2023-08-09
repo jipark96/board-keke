@@ -1,6 +1,7 @@
 package com.example.board.comment.controller;
 
 import com.example.board.comment.dto.PostCommentDto;
+import com.example.board.comment.dto.PostResponseCommentDto;
 import com.example.board.comment.service.CommentService;
 import com.example.board.common.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,9 +24,9 @@ public class CommentController {
     @Operation(summary = "댓글 생성")
     @ResponseBody
     @PostMapping("")
-    public BaseResponse<String> createComment(@RequestBody PostCommentDto postCommentDto) {
-        commentService.createComment(postCommentDto);
-        return new BaseResponse<>("댓글 작성 성공");
+    public BaseResponse<PostResponseCommentDto> createComment(@RequestBody PostCommentDto postCommentDto) {
+        PostResponseCommentDto postResponseCommentDto = commentService.createComment(postCommentDto);
+        return new BaseResponse<>(postResponseCommentDto);
     }
 
 }
