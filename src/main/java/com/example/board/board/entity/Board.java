@@ -10,8 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
+@Setter
 @Entity
+@Builder
 public class Board extends BaseEntity {
 
     @Id
@@ -25,6 +28,13 @@ public class Board extends BaseEntity {
     @Column(name = "board_content", nullable = false)
     private String content;
 
+    @Column
+    private String username;
+
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int view;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -36,13 +46,6 @@ public class Board extends BaseEntity {
         this.user = user;
     }
 
-    @Builder
-    public Board(Long id, String title, String content, User user) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        setUser(user);
-    }
 
     public void updateBoard(String title, String content) {
         this.title = title;

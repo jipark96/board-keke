@@ -3,6 +3,7 @@ package com.example.board.comment.entity;
 import com.example.board.board.entity.Board;
 import com.example.board.comment.dto.PostCommentDto;
 import com.example.board.common.entity.BaseEntity;
+import com.example.board.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,8 +24,12 @@ public class Comment extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "boardId")
+    @JoinColumn(name = "board_id")
     private Board board;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public void setBoard(Board board) {
         this.board = board;

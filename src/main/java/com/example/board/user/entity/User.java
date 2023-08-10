@@ -1,6 +1,7 @@
 package com.example.board.user.entity;
 
 import com.example.board.board.entity.Board;
+import com.example.board.comment.entity.Comment;
 import com.example.board.common.entity.BaseEntity;
 
 import jakarta.persistence.*;
@@ -35,6 +36,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Board> boardList = new ArrayList<Board>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<Comment> commentList = new ArrayList<Comment>();
 
     public String getUsername() {
         return this.username;

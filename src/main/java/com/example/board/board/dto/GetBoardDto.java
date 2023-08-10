@@ -2,6 +2,7 @@ package com.example.board.board.dto;
 
 import com.example.board.board.entity.Board;
 import com.example.board.comment.entity.Comment;
+import com.example.board.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,16 +21,18 @@ public class GetBoardDto {
     private String title;
     private String content;
     private String username;
+    private int view;
+    private Long userId;
     private LocalDateTime createdAt;
-
-    private int size;
     private List<String> commentList = new ArrayList<>();
 
     public GetBoardDto(Board board) {
         this.id = board.getId();
         this.title = board.getTitle();
         this.content = board.getContent();
-        this.username = (board.getUser() != null) ? board.getUser().getUsername() : null; // 수정 필요
+        this.view = board.getView();
+        this.username = board.getUser().getUsername();
+        this.userId = board.getUser().getId();
         this.createdAt = board.getCreatedAt();
         for (Comment comment : board.getCommentList()) {
             this.commentList.add(comment.getContent());

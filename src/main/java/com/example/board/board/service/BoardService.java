@@ -6,6 +6,8 @@ import com.example.board.board.dto.PostBoardDto;
 import com.example.board.board.entity.Board;
 import com.example.board.board.repository.BoardRepository;
 import com.example.board.common.response.BaseResponse;
+import com.example.board.user.entity.User;
+import com.example.board.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
@@ -21,37 +23,30 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
+
+//    //[글 생성]
+//    public void createBoard(PostBoardDto postBoardDto) {
+//        Board board = postBoardDto.toEntity();
+//        boardRepository.save(board).getId();
+//    }
 
     //[글 생성]
-    public void createBoard(PostBoardDto postBoardDto) {
+    @Transactional
+    public Long createBoard(PostBoardDto postBoardDto, String username) {
+        /* User 정보를 가져와 dto에 담아준다. */
+        User user = userRepository.findByUsername(postBoardDto.getUsername());
+        postBoardDto.setUser(user);
         Board board = postBoardDto.toEntity();
-        boardRepository.save(board).getId();
+        boardRepository.save(board);
+
+        return board.getId();
     }
 
+
+
+
     //[글 전체 조회]
-//    @Transactional(readOnly = true)
-//    public BaseResponse<List<GetBoardDto>> getAllBoard(int startPage) {
-//        PageRequest pageRequest = PageRequest.of(startPage, 8, Sort.by(Sort.Direction.DESC, "id"));
-//        Slice<Board> boardSlice = boardRepository.findAll(pageRequest);
-//        Slice<GetBoardDto> getBoardDtoSlice = boardSlice.map(GetBoardDto::new);
-//        List<GetBoardDto> getBoardDtoList = getBoardDtoSlice.getContent();
-//
-//        // 글의 개수를 구함
-//        int count = boardRepository.getTotalBoardCount();
-//
-//        BaseResponse<List<GetBoardDto>> response = new BaseResponse<>(getBoardDtoList);
-//        response.setCount(count); // 글의 개수 설정
-//
-//        return response;
-//    }
-
-//    @Transactional(readOnly = true)
-//    public List<GetBoardDto> getAllBoard() {
-//        return boardRepository.findAll().stream()
-//                .map(GetBoardDto::new)
-//                .collect(Collectors.toList());
-//    }
-
     @Transactional(readOnly = true)
     public List<GetBoardDto> getAllBoard(int startPage) {
         PageRequest pageRequest = PageRequest.of(startPage,8, Sort.by(Sort.Direction.DESC,"id"));
@@ -61,17 +56,6 @@ public class BoardService {
 
         return getBoardDtoList;
     }
-
-
-//    @Transactional(readOnly = true)
-//    public List<GetBoardDto> getAllBoard(int pageNumber, int pageSize) {
-//        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-//        Page<Board> boardPage = boardRepository.findAll(pageable);
-//        return boardPage.getContent().stream()
-//                .map(GetBoardDto::new)
-//                .collect(Collectors.toList());
-//    }
-
 
 
     //[글 상세 조회]
