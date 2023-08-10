@@ -11,5 +11,6 @@ import lombok.*;
 public class LoginResponseDto {
     private Long id;
     private String name;
+    private String username;
     private String jwtToken;
 }

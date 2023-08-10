@@ -3,26 +3,28 @@ package com.example.board.comment.dto;
 import com.example.board.board.entity.Board;
 import com.example.board.comment.entity.Comment;
 import com.example.board.user.entity.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class PostCommentDto {
+    private Long id;
+    private User user;
 
-    private Long boardId;
-    private Long userId;
+    private Board board;
     private String content;
 
 
-    public Comment toEntity(Board board) {
+    public Comment toEntity() {
         return Comment.builder()
-                .content(this.content)
+                .id(id)
+                .content(content)
+                .user(user)
                 .board(board)
                 .build();
     }
+
 }

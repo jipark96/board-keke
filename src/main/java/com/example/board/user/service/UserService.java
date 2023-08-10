@@ -67,6 +67,7 @@ public class UserService {
         return LoginResponseDto.builder()
                 .id(user.getId())
                 .name(user.getName())
+                .username(user.getUsername())
                 .jwtToken(jwtToken)
                 .build();
     }

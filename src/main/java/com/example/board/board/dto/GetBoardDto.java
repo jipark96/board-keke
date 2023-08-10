@@ -1,6 +1,7 @@
 package com.example.board.board.dto;
 
 import com.example.board.board.entity.Board;
+import com.example.board.comment.dto.PostResponseCommentDto;
 import com.example.board.comment.entity.Comment;
 import com.example.board.user.entity.User;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -24,7 +26,8 @@ public class GetBoardDto {
     private int view;
     private Long userId;
     private LocalDateTime createdAt;
-    private List<String> commentList = new ArrayList<>();
+//    private List<String> commentList = new ArrayList<>();
+    private List<PostResponseCommentDto> commentList;
 
     public GetBoardDto(Board board) {
         this.id = board.getId();
@@ -34,9 +37,10 @@ public class GetBoardDto {
         this.username = board.getUser().getUsername();
         this.userId = board.getUser().getId();
         this.createdAt = board.getCreatedAt();
-        for (Comment comment : board.getCommentList()) {
-            this.commentList.add(comment.getContent());
-        }
+//        for (Comment comment : board.getCommentList()) {
+//            this.commentList.add(comment.getContent());
+//        }
+        this.commentList = board.getCommentList().stream().map(PostResponseCommentDto::new).collect(Collectors.toList());
     }
 
 }

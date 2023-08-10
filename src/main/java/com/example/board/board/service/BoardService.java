@@ -25,17 +25,11 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-//    //[글 생성]
-//    public void createBoard(PostBoardDto postBoardDto) {
-//        Board board = postBoardDto.toEntity();
-//        boardRepository.save(board).getId();
-//    }
-
     //[글 생성]
     @Transactional
     public Long createBoard(PostBoardDto postBoardDto, String username) {
         /* User 정보를 가져와 dto에 담아준다. */
-        User user = userRepository.findByUsername(postBoardDto.getUsername());
+        User user = userRepository.findByUsername(username);
         postBoardDto.setUser(user);
         Board board = postBoardDto.toEntity();
         boardRepository.save(board);

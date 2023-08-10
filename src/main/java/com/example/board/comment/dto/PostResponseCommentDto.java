@@ -13,15 +13,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class PostResponseCommentDto {
-
+    private Long id;
     private Long boardId;
+    private Long userId;
     private String username;
     private String content;
     private LocalDateTime createdAt;
 
-    @Override
-    public String toString() {
-        return content;
+    public PostResponseCommentDto(Comment comment) {
+        this.id = comment.getId();
+        this.content = comment.getContent();
+        this.createdAt = comment.getCreatedAt();
+        this.username = comment.getUser().getUsername();
+        this.userId = comment.getUser().getId();
+        this.boardId = comment.getBoard().getId();
     }
-
 }

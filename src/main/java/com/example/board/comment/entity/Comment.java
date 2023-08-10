@@ -24,22 +24,24 @@ public class Comment extends BaseEntity {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_id")
+    @JoinColumn(name = "boardId")
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userId")
     private User user;
+
 
     public void setBoard(Board board) {
         this.board = board;
     }
 
     @Builder
-    public Comment(Long id, String content, Board board) {
+    public Comment(Long id, String content, Board board, User user) {
         this.id = id;
         this.content = content;
         this.board = board;
+        this.user = user;
     }
 
     public void makeComment(PostCommentDto postCommentDto, Board board) {

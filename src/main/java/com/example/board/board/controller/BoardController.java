@@ -5,11 +5,8 @@ import com.example.board.board.dto.PatchBoardDto;
 import com.example.board.board.dto.PostBoardDto;
 import com.example.board.board.service.BoardService;
 import com.example.board.common.response.BaseResponse;
-import com.example.board.user.dto.GetUserDto;
-import com.example.board.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +34,7 @@ public class BoardController {
 
     /**
      * 게시판 글 리스트 조회 API
-     * [GET] /board
+     * [GET] /board?startPage=0
      */
     @ResponseBody
     @Operation(summary = "글 전체 조회")
