@@ -1,6 +1,7 @@
 package com.example.board.board.service;
 
 import com.example.board.board.dto.GetBoardDto;
+import com.example.board.board.dto.GetBoardListResponseDto;
 import com.example.board.board.dto.PatchBoardDto;
 import com.example.board.board.dto.PostBoardDto;
 import com.example.board.board.entity.Board;
@@ -42,13 +43,14 @@ public class BoardService {
 
     //[글 전체 조회]
     @Transactional(readOnly = true)
-    public List<GetBoardDto> getAllBoard(int startPage) {
-        PageRequest pageRequest = PageRequest.of(startPage,8, Sort.by(Sort.Direction.DESC,"id"));
+    public GetBoardListResponseDto getAllBoard(int page) {
+        PageRequest pageRequest = PageRequest.of(page,8, Sort.by(Sort.Direction.DESC,"id"));
         Slice<Board> boardSlice = boardRepository.findAll(pageRequest);
-        Slice<GetBoardDto> getBoardDtoSlice = boardSlice.map(GetBoardDto::new);
-        List<GetBoardDto> getBoardDtoList = getBoardDtoSlice.getContent();
+        List<GetBoardDto> getBoardDtoList = boardSlice.map(GetBoardDto::new).getContent();
 
-        return getBoardDtoList;
+        int totalCount = boardRepository.findAll().size();
+
+        return new GetBoardListResponseDto(getBoardDtoList, totalCount);
     }
 
 
@@ -74,4 +76,11 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
         boardRepository.delete(board);
     }
+
+    //[조회수 증가]
+    @Transactional
+    public int updateView(Long boardId) {
+        return boardRepository.updateView(boardId);
+    }
+
 }

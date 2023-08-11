@@ -1,6 +1,7 @@
 package com.example.board.board.controller;
 
 import com.example.board.board.dto.GetBoardDto;
+import com.example.board.board.dto.GetBoardListResponseDto;
 import com.example.board.board.dto.PatchBoardDto;
 import com.example.board.board.dto.PostBoardDto;
 import com.example.board.board.service.BoardService;
@@ -39,9 +40,10 @@ public class BoardController {
     @ResponseBody
     @Operation(summary = "글 전체 조회")
     @GetMapping("")
-    public BaseResponse<List<GetBoardDto>> getAllBoard(@RequestParam(required = true) int startPage) {
-        List<GetBoardDto> getBoardDtoList = boardService.getAllBoard(startPage);
-        return new BaseResponse<>(getBoardDtoList);
+    public BaseResponse<GetBoardListResponseDto> getAllBoard(@RequestParam(required = true) int page) {
+        GetBoardListResponseDto getBoardListResponseDto = boardService.getAllBoard(page);
+
+        return new BaseResponse<>(getBoardListResponseDto);
     }
 
     /**
@@ -53,6 +55,7 @@ public class BoardController {
     @GetMapping("/{boardId}")
     public BaseResponse<GetBoardDto> getBoard(@PathVariable("boardId") Long boardId) {
         GetBoardDto getBoardDto = boardService.getBoard(boardId);
+        boardService.updateView(boardId);
         return new BaseResponse<>(getBoardDto);
     }
 
