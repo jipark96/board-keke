@@ -26,7 +26,6 @@ public class GetBoardDto {
     private int view;
     private Long userId;
     private LocalDateTime createdAt;
-//    private List<String> commentList = new ArrayList<>();
     private List<PostResponseCommentDto> commentList;
 
     public GetBoardDto(Board board) {
@@ -37,9 +36,6 @@ public class GetBoardDto {
         this.username = board.getUser().getUsername();
         this.userId = board.getUser().getId();
         this.createdAt = board.getCreatedAt();
-//        for (Comment comment : board.getCommentList()) {
-//            this.commentList.add(comment.getContent());
-//        }
         this.commentList = board.getCommentList().stream().map(PostResponseCommentDto::new).collect(Collectors.toList());
     }
 

@@ -72,7 +72,6 @@ public class BoardService {
     public void deleteBoard(Long boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
-//        board.deleteBoard();
         boardRepository.delete(board);
     }
 }

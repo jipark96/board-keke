@@ -48,4 +48,8 @@ public class Comment extends BaseEntity {
         this.board = board;
         this.content = postCommentDto.getContent();
     }
+
+    public void updateComment(String content) {
+        this.content = content;
+    }
 }

@@ -38,28 +38,31 @@ public class CommentService {
 //    }
         //[댓글 생성]
     @Transactional
-        public Long createComment(PostCommentDto postCommentDto, String username, Long id) {
+        public PostResponseCommentDto createComment(PostCommentDto postCommentDto, String username, Long id) {
             User user = userRepository.findByUsername(username);
             Board board = boardRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
             postCommentDto.setUser(user);
             postCommentDto.setBoard(board);
             Comment comment = postCommentDto.toEntity();
-            commentRepository.save(comment);
+            Comment savedComment = commentRepository.save(comment);
 
-            return comment.getId();
+            return new PostResponseCommentDto(savedComment);
 
         }
 
-    @Transactional
-    public Long createBoard(PostBoardDto postBoardDto, String username) {
-        /* User 정보를 가져와 dto에 담아준다. */
-        User user = userRepository.findByUsername(username);
-        postBoardDto.setUser(user);
-        Board board = postBoardDto.toEntity();
-        boardRepository.save(board);
+    //[댓글 삭제]
+    public void deleteComment(Long boardId, Long id) {
+        Comment comment = commentRepository.findByBoardIdAndId(boardId,id)
+                .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+        commentRepository.delete(comment);
+    }
 
-        return board.getId();
+    //[댓글 수정]
+    public void updateComment(Long boardId, Long id, PostCommentDto postCommentDto) {
+        Comment comment = commentRepository.findByBoardIdAndId(boardId, id)
+                .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+        comment.updateComment(postCommentDto.getContent());
     }
 
 }
