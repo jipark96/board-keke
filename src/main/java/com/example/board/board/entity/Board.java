@@ -2,6 +2,7 @@ package com.example.board.board.entity;
 
 import com.example.board.comment.entity.Comment;
 import com.example.board.common.entity.BaseEntity;
+import com.example.board.file.entity.File;
 import com.example.board.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,6 +42,10 @@ public class Board extends BaseEntity {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     List<Comment> commentList = new ArrayList<Comment>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<File> fileEntities = new ArrayList<File>();
+
 
     public void setUser(User user) {
         this.user = user;
