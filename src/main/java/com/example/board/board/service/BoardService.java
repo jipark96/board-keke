@@ -43,12 +43,21 @@ public class BoardService {
 
     //[글 전체 조회]
     @Transactional(readOnly = true)
-    public GetBoardListResponseDto getAllBoard(int page) {
-        PageRequest pageRequest = PageRequest.of(page,8, Sort.by(Sort.Direction.DESC,"id"));
-        Slice<Board> boardSlice = boardRepository.findAll(pageRequest);
-        List<GetBoardDto> getBoardDtoList = boardSlice.map(GetBoardDto::new).getContent();
+    public GetBoardListResponseDto getAllBoard(int page, int size, String keyword) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,"id"));
+        Page<Board> boardPage;
 
-        int totalCount = boardRepository.findAll().size();
+        int totalCount;
+
+        if (keyword == null) {
+            boardPage = boardRepository.findAll(pageable);
+            totalCount = boardRepository.findAll().size();
+        } else {
+            boardPage = boardRepository.findByTitleContaining(keyword, pageable);
+            totalCount = boardRepository.countByTitleContaining(keyword);
+        }
+
+        List<GetBoardDto> getBoardDtoList = boardPage.get().map(GetBoardDto::new).collect(Collectors.toList());
 
         return new GetBoardListResponseDto(getBoardDtoList, totalCount);
     }
@@ -82,5 +91,7 @@ public class BoardService {
     public int updateView(Long boardId) {
         return boardRepository.updateView(boardId);
     }
+
+
 
 }
