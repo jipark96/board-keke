@@ -1,11 +1,12 @@
-package com.example.board.board.entity;
+package com.example.board.file.entity;
 
+import com.example.board.board.entity.Board;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor
 @Getter
 @Entity
 public class File {

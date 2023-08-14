@@ -28,7 +28,7 @@ public class BoardController {
     @ResponseBody
     @Operation(summary = "글 생성")
     @PostMapping("")
-    public BaseResponse<String> createBoard(@RequestBody PostBoardDto postBoardDto, @RequestParam String username) {
+    public BaseResponse<String> createBoard(@ModelAttribute PostBoardDto postBoardDto, @RequestParam String username) {
         boardService.createBoard(postBoardDto, username);
         return new BaseResponse<>("글쓰기 완료");
     }

@@ -44,7 +44,7 @@ public class Board extends BaseEntity {
     List<Comment> commentList = new ArrayList<Comment>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<File> fileEntities = new ArrayList<File>();
+    private List<File> fileList = new ArrayList<>();
 
 
     public void setUser(User user) {
@@ -64,5 +64,8 @@ public class Board extends BaseEntity {
     public void addComment(Comment comment) {
         comment.setBoard(this);
         commentList.add(comment);
+    }
+    public List<File> getFileList() {
+        return this.fileList;
     }
 }

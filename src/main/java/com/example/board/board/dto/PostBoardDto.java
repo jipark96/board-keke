@@ -3,6 +3,7 @@ package com.example.board.board.dto;
 import com.example.board.board.entity.Board;
 import com.example.board.user.entity.User;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @Getter
@@ -16,7 +17,7 @@ public class PostBoardDto {
     private String username;
     private int view;
     private User user;
-
+    private MultipartFile file;
     public Board toEntity() {
         return Board.builder()
                 .title(title)

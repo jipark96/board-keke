@@ -6,15 +6,18 @@ import com.example.board.board.dto.PatchBoardDto;
 import com.example.board.board.dto.PostBoardDto;
 import com.example.board.board.entity.Board;
 import com.example.board.board.repository.BoardRepository;
-import com.example.board.common.response.BaseResponse;
+import com.example.board.file.entity.File;
+import com.example.board.file.repository.FileRepository;
 import com.example.board.user.entity.User;
 import com.example.board.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +28,8 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final FileRepository fileRepository;
+
 
     //[글 생성]
     @Transactional
@@ -35,9 +40,25 @@ public class BoardService {
         Board board = postBoardDto.toEntity();
         boardRepository.save(board);
 
+        // 파일을 저장하고 File 엔티티 생성 후 Board와 연결
+        MultipartFile file = postBoardDto.getFile();
+        if (file != null && !file.isEmpty()) {
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            String filePath = "/absolute/path/to/your/project/src/main/resources/uploadedFiles/";
+
+            File newFile = File.builder()
+                    .fileName(fileName)
+                    .originalFileName(file.getOriginalFilename())
+                    .contentType(file.getContentType())
+                    .size(file.getSize())
+                    .filePath(filePath)
+                    .board(board)
+                    .build();
+            fileRepository.save(newFile);
+        }
+
         return board.getId();
     }
-
 
 
 
