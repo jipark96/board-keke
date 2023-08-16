@@ -18,6 +18,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,11 +47,23 @@ public class BoardService {
         // 파일을 저장하고 File 엔티티 생성 후 Board와 연결
         List<MultipartFile> files = postBoardDto.getFiles();
         if (files != null && !files.isEmpty()) {
-            String filePath = "/absolute/path/to/your/project/src/main/resources/uploadedFiles/";
+            String filePath = "src/main/resources/uploadedFiles";
 
             for (MultipartFile file : files) {
                 if (!file.isEmpty()) {
                     String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+                    // 실제 파일 저장 코드
+                    try {
+                        // 1. 파일 저장 경로 설정
+                        Path targetPath = Paths.get(filePath).resolve(fileName);
+
+                        // 2. 파일 저장
+                        Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new IllegalArgumentException("파일을 저장하는 과정에서 문제가 발생하였습니다.");
+                    }
 
                     File newFile = File.builder()
                             .fileName(fileName)
