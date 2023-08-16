@@ -5,6 +5,8 @@ import com.example.board.user.entity.User;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -17,7 +19,7 @@ public class PostBoardDto {
     private String username;
     private int view;
     private User user;
-    private MultipartFile file;
+    private List<MultipartFile> files;
     public Board toEntity() {
         return Board.builder()
                 .title(title)

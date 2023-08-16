@@ -41,24 +41,31 @@ public class BoardService {
         boardRepository.save(board);
 
         // 파일을 저장하고 File 엔티티 생성 후 Board와 연결
-        MultipartFile file = postBoardDto.getFile();
-        if (file != null && !file.isEmpty()) {
-            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        List<MultipartFile> files = postBoardDto.getFiles();
+        if (files != null && !files.isEmpty()) {
             String filePath = "/absolute/path/to/your/project/src/main/resources/uploadedFiles/";
 
-            File newFile = File.builder()
-                    .fileName(fileName)
-                    .originalFileName(file.getOriginalFilename())
-                    .contentType(file.getContentType())
-                    .size(file.getSize())
-                    .filePath(filePath)
-                    .board(board)
-                    .build();
-            fileRepository.save(newFile);
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+                    File newFile = File.builder()
+                            .fileName(fileName)
+                            .originalFileName(file.getOriginalFilename())
+                            .contentType(file.getContentType())
+                            .size(file.getSize())
+                            .filePath(filePath)
+                            .board(board)
+                            .build();
+                    fileRepository.save(newFile);
+                }
+            }
         }
+
 
         return board.getId();
     }
+
 
 
 
