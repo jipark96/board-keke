@@ -20,4 +20,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // title 필드에 keyword가 포함된 게시물의 수를 반환하는 메서드
     int countByTitleContaining(String keyword);
+
 }

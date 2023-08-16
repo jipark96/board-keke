@@ -4,6 +4,7 @@ import com.example.board.board.dto.GetBoardDto;
 import com.example.board.board.dto.GetBoardListResponseDto;
 import com.example.board.board.dto.PatchBoardDto;
 import com.example.board.board.dto.PostBoardDto;
+import com.example.board.board.entity.Board;
 import com.example.board.board.service.BoardService;
 import com.example.board.common.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Tag(name = "board 도메인", description = "게시판 API")
@@ -69,7 +71,10 @@ public class BoardController {
     @ResponseBody
     @Operation(summary = "글 수정")
     @PatchMapping("/edit/{boardId}")
-    public BaseResponse<PatchBoardDto> updateBoard(@PathVariable("boardId") Long boardId, @RequestBody PatchBoardDto patchBoardDto) {
+    public BaseResponse<PatchBoardDto> updateBoard(@PathVariable("boardId") Long boardId, @ModelAttribute PatchBoardDto patchBoardDto) {
+        if (patchBoardDto.getDeleted() == null) {
+            patchBoardDto.setDeleted(new ArrayList<>());
+        }
         boardService.updateBoard(boardId, patchBoardDto);
         return new BaseResponse<>(patchBoardDto);
     }
