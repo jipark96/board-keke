@@ -1,7 +1,6 @@
 package com.example.board.comment.controller;
 
-import com.example.board.board.dto.PatchBoardDto;
-import com.example.board.board.dto.PostBoardDto;
+
 import com.example.board.comment.dto.PostCommentDto;
 import com.example.board.comment.dto.PostResponseCommentDto;
 import com.example.board.comment.service.CommentService;
@@ -32,6 +31,21 @@ public class CommentController {
     }
 
     /**
+     * 대댓글 생성
+     * [POST] /board/{id}/comment/{parentId}?username=???
+     */
+    @Operation(summary = "대댓글 생성")
+    @ResponseBody
+    @PostMapping("/{id}/comment/{parentId}")
+    public BaseResponse<PostResponseCommentDto> createChildComment(@PathVariable Long id,
+                                                                   @PathVariable(required = false) Long parentId,
+                                                                   @RequestBody PostCommentDto postCommentDto,
+                                                                   @RequestParam String username) {
+        PostResponseCommentDto postResponseCommentDto = commentService.createChildComment(postCommentDto, username,id, parentId);
+        return new BaseResponse<>(postResponseCommentDto);
+    }
+
+    /**
      * 댓글 삭제
      * [DELETE] /board/{id}/comment/{commentId}
      */
@@ -55,5 +69,6 @@ public class CommentController {
         commentService.updateComment(boardId,id,postCommentDto);
         return new BaseResponse<>(postCommentDto);
     }
+
 
 }

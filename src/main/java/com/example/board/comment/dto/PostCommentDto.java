@@ -13,17 +13,18 @@ import lombok.*;
 public class PostCommentDto {
     private Long id;
     private User user;
-
     private Board board;
     private String content;
+    private Long parentCommentId;
 
 
-    public Comment toEntity() {
+    public Comment toEntity(User user, Board board, Comment parent) {
         return Comment.builder()
                 .id(id)
                 .content(content)
                 .user(user)
                 .board(board)
+                .parent(parent)
                 .build();
     }
 

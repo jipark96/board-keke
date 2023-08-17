@@ -19,7 +19,7 @@ public class PostResponseCommentDto {
     private String username;
     private String content;
     private LocalDateTime createdAt;
-
+    private Long parentCommentId;
     public PostResponseCommentDto(Comment comment) {
         this.id = comment.getId();
         this.content = comment.getContent();
