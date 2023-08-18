@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Transactional
 @Service
@@ -55,8 +58,12 @@ public class CommentService {
         postCommentDto.setBoard(board);
         Comment comment = postCommentDto.toEntity(user, board, parent);
         Comment savedComment = commentRepository.save(comment);
+        PostResponseCommentDto postResponseCommentDto = new PostResponseCommentDto(savedComment);
+        if (parent != null) {
+            postResponseCommentDto.setParentCommentId(parent.getId());
+        }
 
-        return new PostResponseCommentDto(savedComment);
+        return postResponseCommentDto;
     }
 
     //[댓글 삭제]
@@ -73,7 +80,11 @@ public class CommentService {
         comment.updateComment(postCommentDto.getContent());
     }
 
-    //[대댓글 생성]
+    //[댓글 조회]
+    public List<PostResponseCommentDto> findCommentsByBoardId(Long boardId) {
+        List<Comment> comments = commentRepository.findByBoardIdAndParentIsNull(boardId);
+        return comments.stream().map(PostResponseCommentDto::new).collect(Collectors.toList());
+    }
 
 
 }

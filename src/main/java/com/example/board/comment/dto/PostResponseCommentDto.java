@@ -1,11 +1,12 @@
 package com.example.board.comment.dto;
 
-import com.example.board.comment.entity.Comment;
-import com.example.board.user.dto.JoinResponseDto;
+        import com.example.board.comment.entity.Comment;
 
-import lombok.*;
+        import lombok.*;
 
-import java.time.LocalDateTime;
+        import java.time.LocalDateTime;
+        import java.util.List;
+        import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -20,6 +21,9 @@ public class PostResponseCommentDto {
     private String content;
     private LocalDateTime createdAt;
     private Long parentCommentId;
+
+    private List<PostResponseCommentDto> replies;
+
     public PostResponseCommentDto(Comment comment) {
         this.id = comment.getId();
         this.content = comment.getContent();
@@ -27,5 +31,10 @@ public class PostResponseCommentDto {
         this.username = comment.getUser().getUsername();
         this.userId = comment.getUser().getId();
         this.boardId = comment.getBoard().getId();
+        this.parentCommentId = comment.getParent() != null ? comment.getParent().getId() : null;
+        this.replies = comment.getReplies().stream()
+                .map(PostResponseCommentDto::new)
+                .collect(Collectors.toList());
     }
+
 }

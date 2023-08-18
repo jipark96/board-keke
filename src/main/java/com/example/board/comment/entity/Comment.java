@@ -10,6 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -35,6 +38,8 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "parent_comment_id")
     private Comment parent;
 
+    @OneToMany(mappedBy = "parent")
+    private List<Comment> replies = new ArrayList<>();
 
     public void setBoard(Board board) {
         this.board = board;
@@ -57,4 +62,6 @@ public class Comment extends BaseEntity {
     public void updateComment(String content) {
         this.content = content;
     }
+
+
 }

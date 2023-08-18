@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Comment 도메인", description = "댓글 API")
 @RequiredArgsConstructor
 @RestController
@@ -41,7 +43,7 @@ public class CommentController {
                                                                    @PathVariable(required = false) Long parentId,
                                                                    @RequestBody PostCommentDto postCommentDto,
                                                                    @RequestParam String username) {
-        PostResponseCommentDto postResponseCommentDto = commentService.createChildComment(postCommentDto, username,id, parentId);
+        PostResponseCommentDto postResponseCommentDto = commentService.createChildComment(postCommentDto, username, id, parentId);
         return new BaseResponse<>(postResponseCommentDto);
     }
 
@@ -70,5 +72,15 @@ public class CommentController {
         return new BaseResponse<>(postCommentDto);
     }
 
-
+    /**
+     * 댓글 조회
+     * [GET] /board/{id}/comment
+     */
+    @Operation(summary = "댓글 조회")
+    @ResponseBody
+    @GetMapping("/{boardId}/comment")
+    public BaseResponse<List<PostResponseCommentDto>> getComments(@PathVariable Long id) {
+        List<PostResponseCommentDto> commentList = commentService.findCommentsByBoardId(id);
+        return new BaseResponse<>(commentList);
+    }
 }
