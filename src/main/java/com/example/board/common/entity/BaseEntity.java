@@ -1,6 +1,5 @@
 package com.example.board.common.entity;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,19 +14,20 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public class BaseEntity {
 
-    @CreationTimestamp
-    @Column(name = "createAt", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+        @CreationTimestamp
+        @Column(name = "createdAt", nullable = false, updatable = false)
+        private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "updateAt", nullable = false)
-    private LocalDateTime updatedAt;
+        @UpdateTimestamp
+        @Column(name = "updatedAt", nullable = false)
+        private LocalDateTime updatedAt;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false, length = 10)
-    protected Status status = Status.ACTIVE;
+        @Enumerated(EnumType.STRING)
+        @Column(name = "state", nullable = false, length = 10)
+        protected State state = State.ACTIVE;
 
-    public enum Status {
-        ACTIVE, INACTIVE
+        public enum State  {
+            ACTIVE, INACTIVE
+        }
     }
-}
+
