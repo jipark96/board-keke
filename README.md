@@ -1,5 +1,4 @@
 # board-keke
-<<<<<<< HEAD
 =======
 
 ---
@@ -24,4 +23,4 @@
 
 ---
 ![api](https://github.com/jipark96/board-keke/assets/101976260/870ad8a5-cf83-4f9a-8100-841318ca4dd5)
->>>>>>> develop
+
