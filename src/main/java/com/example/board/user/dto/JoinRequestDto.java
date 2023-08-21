@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Getter
 @Setter
@@ -16,11 +17,12 @@ public class JoinRequestDto {
     private String password;
     private String name;
 
-    public User toEntity() {
+    public User toEntity(BCryptPasswordEncoder bCryptPasswordEncoder) {
+
         return User.builder()
                 .email(this.email)
                 .username(this.username)
-                .password(this.password)
+                .password(bCryptPasswordEncoder.encode(this.password))
                 .name(this.name)
                 .build();
     }

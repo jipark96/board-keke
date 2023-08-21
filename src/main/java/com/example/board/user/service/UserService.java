@@ -1,12 +1,13 @@
 package com.example.board.user.service;
 
-
 import com.example.board.common.exceptions.BaseException;
 import com.example.board.user.dto.*;
 import com.example.board.user.entity.User;
 import com.example.board.user.repository.UserRepository;
 import com.example.board.utils.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     //[회원 가입]
     public JoinResponseDto createUser(JoinRequestDto joinRequestDto) {
@@ -33,7 +36,7 @@ public class UserService {
             throw new BaseException(POST_USERS_EXISTS_USERNAME);
         }
 
-        User saveUser = userRepository.save(joinRequestDto.toEntity());
+        User saveUser = userRepository.save(joinRequestDto.toEntity(bCryptPasswordEncoder));
         String jwtToken = jwtService.createJwt(saveUser.getId());
 
         return JoinResponseDto.builder()
@@ -59,9 +62,11 @@ public class UserService {
         User user = userRepository.findByUsernameAndState(loginRequestDto.getUsername(), ACTIVE)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
 
-        if(!user.getPassword().equals(loginRequestDto.getPassword())) {
+        // 입력한 비밀번호를 해싱한 후에 저장된 해시된 비밀번호와 비교
+        if(!bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new BaseException(FAILED_TO_PASSWORD);
         }
+
         String jwtToken = jwtService.createJwt(user.getId());
 
         return LoginResponseDto.builder()

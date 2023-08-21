@@ -13,4 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByState(State state);
 
     User findByUsername(String username);
+
 }
