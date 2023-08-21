@@ -68,4 +68,31 @@ public class UserController {
         return new BaseResponse<>(loginResponseDto);
     }
 
+    /**
+     * 회원 탈퇴 API
+     * [DELETE] /user/{userId}
+     */
+    @ResponseBody
+    @Operation(summary = "회원 탈퇴")
+    @DeleteMapping("/{userId}")
+    public BaseResponse<String> deleteUser(@PathVariable("userId") Long userId) {
+        Long jwtUserId = jwtService.getUserId();
+
+        userService.deleteUser(userId);
+
+        String result = "삭제 완료";
+        return new BaseResponse<>(result);
+    }
+
+    /**
+     * 회원 상세 조회
+     * [GET] /user/{userId}
+     */
+    @ResponseBody
+    @Operation(summary = "회원 상세 조회")
+    @GetMapping("/{userId}")
+    public BaseResponse<GetUserDto> getUser(@PathVariable("userId") Long userId) {
+        GetUserDto getUserDto = userService.getUser(userId);
+        return new BaseResponse<>(getUserDto);
+    }
 }

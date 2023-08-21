@@ -62,6 +62,10 @@ public class UserService {
         User user = userRepository.findByUsernameAndState(loginRequestDto.getUsername(), ACTIVE)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
 
+//        if(!user.getPassword().equals(loginRequestDto.getPassword())) {
+//            throw new BaseException(FAILED_TO_PASSWORD);
+//        }
+
         // 입력한 비밀번호를 해싱한 후에 저장된 해시된 비밀번호와 비교
         if(!bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new BaseException(FAILED_TO_PASSWORD);
@@ -75,6 +79,21 @@ public class UserService {
                 .username(user.getUsername())
                 .jwtToken(jwtToken)
                 .build();
+    }
+
+    //[회원 탈퇴]
+    public void deleteUser(Long userId) {
+        User user = userRepository.findByIdAndState(userId, ACTIVE)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        user.deleteUser();
+    }
+
+    //[회원 상세 정보 조회]
+    @Transactional(readOnly = true)
+    public GetUserDto getUser(Long userId) {
+        User user = userRepository.findByIdAndState(userId, ACTIVE)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        return new GetUserDto(user);
     }
 
 }

@@ -89,4 +89,14 @@ public class User extends BaseEntity implements UserDetails {
         return true;  // true : 사용 가능
     }
 
+    //[회원 수정]
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    //[회원 탈퇴]
+    public void deleteUser() {
+        this.state = State.INACTIVE;
+    }
+
 }

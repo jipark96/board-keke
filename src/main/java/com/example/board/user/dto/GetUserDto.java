@@ -15,12 +15,14 @@ public class GetUserDto {
     private Long id;
     private String email;
     private String username;
+    private String password;
     private String name;
 
     public GetUserDto(User user)  {
         this.id = user.getId();
         this.email = user.getEmail();
         this.username = user.getUsername();
+        this.password=user.getPassword();
         this.name = user.getName();
     }
 }
