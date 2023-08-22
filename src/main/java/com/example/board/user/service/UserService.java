@@ -82,6 +82,7 @@ public class UserService {
     }
 
     //[회원 탈퇴]
+    @Transactional
     public void deleteUser(Long userId) {
         User user = userRepository.findByIdAndState(userId, ACTIVE)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));

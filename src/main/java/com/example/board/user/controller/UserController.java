@@ -76,7 +76,6 @@ public class UserController {
     @Operation(summary = "회원 탈퇴")
     @DeleteMapping("/{userId}")
     public BaseResponse<String> deleteUser(@PathVariable("userId") Long userId) {
-        Long jwtUserId = jwtService.getUserId();
 
         userService.deleteUser(userId);
 
