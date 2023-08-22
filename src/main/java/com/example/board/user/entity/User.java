@@ -90,8 +90,15 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     //[회원 수정]
-    public void updateName(String name) {
+    public void updateNameAndPassword(String name, String email, String password) {
         this.name = name;
+        this.email = email;
+        this.password = password;
+    }
+
+    //[비밀번호 수정]
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
     }
 
     //[회원 탈퇴]

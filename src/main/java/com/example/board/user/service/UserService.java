@@ -62,10 +62,6 @@ public class UserService {
         User user = userRepository.findByUsernameAndState(loginRequestDto.getUsername(), ACTIVE)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
 
-//        if(!user.getPassword().equals(loginRequestDto.getPassword())) {
-//            throw new BaseException(FAILED_TO_PASSWORD);
-//        }
-
         // 입력한 비밀번호를 해싱한 후에 저장된 해시된 비밀번호와 비교
         if(!bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new BaseException(FAILED_TO_PASSWORD);
@@ -76,6 +72,7 @@ public class UserService {
         return LoginResponseDto.builder()
                 .id(user.getId())
                 .name(user.getName())
+                .email(user.getEmail())
                 .username(user.getUsername())
                 .jwtToken(jwtToken)
                 .build();
@@ -97,4 +94,21 @@ public class UserService {
         return new GetUserDto(user);
     }
 
+    //[회원 수정]
+    public void modifyUser(Long userId, PatchUserDto patchUserDto) {
+        User user = userRepository.findByIdAndState(userId, ACTIVE)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        // 수정될 비밀번호를 암호화하여 저장
+        String newPassword = patchUserDto.getPassword();
+        if (newPassword != null && !newPassword.isEmpty()) {
+            user.updatePassword(bCryptPasswordEncoder.encode(newPassword));
+        }
+
+        user.updateNameAndPassword(
+                patchUserDto.getName(),
+                patchUserDto.getEmail(),
+                user.getPassword()
+        );
+    }
 }

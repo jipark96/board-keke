@@ -94,4 +94,18 @@ public class UserController {
         GetUserDto getUserDto = userService.getUser(userId);
         return new BaseResponse<>(getUserDto);
     }
+
+    /**
+     * 회원 정보 수정
+     * [PATCH] /user/edit/{userId}
+     */
+    @ResponseBody
+    @Operation(summary = "회원 정보 수정")
+    @PatchMapping("edit/{userId}")
+    public BaseResponse<PatchUserDto> modifyUser(@PathVariable("userId") Long userId, @RequestBody PatchUserDto patchUserDto) {
+        Long jwtUserId = jwtService.getUserId();
+
+        userService.modifyUser(userId, patchUserDto);
+        return new BaseResponse<>(patchUserDto);
+    }
 }
