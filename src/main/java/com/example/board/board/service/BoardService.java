@@ -10,6 +10,9 @@ import com.example.board.file.entity.File;
 import com.example.board.file.repository.FileRepository;
 import com.example.board.user.entity.User;
 import com.example.board.user.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -82,9 +87,6 @@ public class BoardService {
 
         return board.getId();
     }
-
-
-
 
     //[글 전체 조회]
     @Transactional(readOnly = true)
@@ -149,10 +151,44 @@ public class BoardService {
     }
 
     //[조회수 증가]
+//    @Transactional
+//    public int updateView(Long boardId) {
+//        return boardRepository.updateView(boardId);
+//    }
+
+
+
+    //[조회수 증가]
     @Transactional
-    public int updateView(Long boardId) {
-        return boardRepository.updateView(boardId);
+    public void updateView(Long boardId, HttpServletRequest request, HttpServletResponse response) {
+        Cookie oldCookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("boardView")) {
+                    oldCookie = cookie;
+                }
+            }
+        }
+
+        if (oldCookie != null) {
+            if (!oldCookie.getValue().contains("[" + boardId.toString() + "]")) {
+               boardRepository.updateView(boardId);
+               oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
+               oldCookie.setPath("/");
+               oldCookie.setMaxAge(60*60*24);
+               response.addCookie(oldCookie);
+            }
+        } else {
+            boardRepository.updateView(boardId);
+            Cookie newCookie = new Cookie("boardView", "[" + boardId + "]");
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60*60*24);
+            response.addCookie(newCookie);
+        }
     }
+
+
 
     //[파일 수정 저장]
     private void saveFiles(Board board, List<MultipartFile> files) {

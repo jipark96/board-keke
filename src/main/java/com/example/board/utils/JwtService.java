@@ -25,6 +25,7 @@ public class JwtService {
     @Value("${jwt.secret.key}")
     private String JWT_SECRET_KEY;
 
+    // JWT 시크릿 키를 바이트 배열로 변환하여 Key 객체로 생성
     private Key generateKey() {
         byte[] secretKeyBytes = JWT_SECRET_KEY.getBytes(StandardCharsets.UTF_8);
         return new SecretKeySpec(secretKeyBytes, SignatureAlgorithm.HS256.getJcaName());
@@ -39,12 +40,12 @@ public class JwtService {
         Date now = new Date();
         Key key = generateKey();
         return Jwts.builder()
-                .setHeaderParam("type","jwt")
-                .claim("userIdx",userId)
-                .setIssuedAt(now)
-                .setExpiration(new Date(System.currentTimeMillis()+1*(1000*60*60*24*365)))
-                .signWith(key)
-                .compact();
+                .setHeaderParam("type","jwt") // JWT 헤더에 "type" 필드 추가
+                .claim("userIdx",userId) // JWT 페이로드에 "userIdx" 클레임 추가
+                .setIssuedAt(now) // 토큰 발행 시간 설정
+                .setExpiration(new Date(System.currentTimeMillis()+1*(1000*60*60*24*365))) // 토큰 만료 시간 설정 (1년)
+                .signWith(key) // 토큰 서명에 사용할 키 설정
+                .compact();  // 토큰 생성
     }
 
     /*
@@ -53,7 +54,7 @@ public class JwtService {
     */
     public String getJwt(){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        return request.getHeader("X-ACCESS-TOKEN");
+        return request.getHeader("X-ACCESS-TOKEN"); // 요청 헤더에서 X-ACCESS-TOKEN 키를 이용하여 JWT 추출
     }
 
     /*
@@ -73,14 +74,15 @@ public class JwtService {
         Jws<Claims> claims;
         try{
             claims = Jwts.parserBuilder()
-                    .setSigningKey(JWT_SECRET_KEY.getBytes())
+                    .setSigningKey(JWT_SECRET_KEY.getBytes()) // JWT 키를 이용하여 파싱에 사용할 서명 키 설정
                     .build()
-                    .parseClaimsJws(accessToken);
+                    .parseClaimsJws(accessToken); // JWT 파싱 수행
         } catch (Exception ignored) {
             throw new BaseException(INVALID_JWT);
         }
 
         // 3. userIdx 추출
-        return claims.getBody().get("userId",Long.class);
+        return claims.getBody().get("userId",Long.class); // JWT 페이로드에서 "userId" 클레임 추출하여 반환
+
     }
 }

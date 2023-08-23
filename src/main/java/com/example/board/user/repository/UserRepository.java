@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsernameAndState(String username, State state);
     List<User> findByState(State state);
-
     User findByUsername(String username);
     Optional<User> findByIdAndState(Long id, State state);
 }

@@ -59,6 +59,8 @@ public class UserService {
 
     //[로그인]
     public LoginResponseDto loginUser(LoginRequestDto loginRequestDto) {
+
+        // 입력한 아이디로 활성화된 사용자 정보 조회
         User user = userRepository.findByUsernameAndState(loginRequestDto.getUsername(), ACTIVE)
                 .orElseThrow(() -> new BaseException(NOT_FIND_USER));
 
@@ -81,6 +83,7 @@ public class UserService {
     //[회원 탈퇴]
     @Transactional
     public void deleteUser(Long userId) {
+        // 활성화된 사용자 정보 조회 및 삭제 처리
         User user = userRepository.findByIdAndState(userId, ACTIVE)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
         user.deleteUser();
@@ -99,7 +102,7 @@ public class UserService {
         User user = userRepository.findByIdAndState(userId, ACTIVE)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
 
-        // 수정될 비밀번호를 암호화하여 저장
+        // 비밀번호 수정 시 암호화 및 기타 정보 업데이트
         String newPassword = patchUserDto.getPassword();
         if (newPassword != null && !newPassword.isEmpty()) {
             user.updatePassword(bCryptPasswordEncoder.encode(newPassword));

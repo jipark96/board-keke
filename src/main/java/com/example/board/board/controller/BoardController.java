@@ -4,17 +4,18 @@ import com.example.board.board.dto.GetBoardDto;
 import com.example.board.board.dto.GetBoardListResponseDto;
 import com.example.board.board.dto.PatchBoardDto;
 import com.example.board.board.dto.PostBoardDto;
-import com.example.board.board.entity.Board;
 import com.example.board.board.service.BoardService;
 import com.example.board.common.response.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 @Tag(name = "board 도메인", description = "게시판 API")
 @RestController
@@ -58,9 +59,9 @@ public class BoardController {
     @ResponseBody
     @Operation(summary = "글 상세 조회")
     @GetMapping("/{boardId}")
-    public BaseResponse<GetBoardDto> getBoard(@PathVariable("boardId") Long boardId) {
+    public BaseResponse<GetBoardDto> getBoard(@PathVariable("boardId") Long boardId, HttpServletRequest request, HttpServletResponse response) {
         GetBoardDto getBoardDto = boardService.getBoard(boardId);
-        boardService.updateView(boardId);
+        boardService.updateView(boardId,request, response);
         return new BaseResponse<>(getBoardDto);
     }
 

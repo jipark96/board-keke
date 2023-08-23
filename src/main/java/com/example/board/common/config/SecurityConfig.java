@@ -35,11 +35,11 @@ public class SecurityConfig  {
                .cors()
                .and()
                .authorizeHttpRequests()
-               .requestMatchers("/**").permitAll()
-               .anyRequest().authenticated()
+               .requestMatchers("/**").permitAll() // 모든 요청 허용
+               .anyRequest().authenticated() // 나머지 요청에는 인증이 필요함
                .and()
-               .csrf().disable()
-               .build();
+               .csrf().disable() // CSRF 보호 비활성화
+               .build(); // SecurityFilterChain 구성 및 반환
    }
 
    //[인증 관리자 관련 설정]
@@ -53,6 +53,7 @@ public class SecurityConfig  {
        return daoAuthenticationProvider;
    }
 
+   //[비밀번호를 암호화하는데 사용]
    @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
        return new BCryptPasswordEncoder();
