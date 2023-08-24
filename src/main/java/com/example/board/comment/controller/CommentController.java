@@ -54,9 +54,9 @@ public class CommentController {
     @Operation(summary = "댓글 삭제")
     @ResponseBody
     @DeleteMapping("/{boardId}/comment/{id}")
-    public BaseResponse<String> deleteComment(@PathVariable Long boardId, @PathVariable Long id) {
-        commentService.deleteComment(boardId, id);
-        return new BaseResponse<>("삭제 완료");
+    public BaseResponse<PostResponseCommentDto> deleteComment(@PathVariable Long boardId, @PathVariable Long id) {
+        PostResponseCommentDto postResponseCommentDto = commentService.deleteComment(boardId, id);
+        return new BaseResponse<>(postResponseCommentDto);
     }
 
     /**

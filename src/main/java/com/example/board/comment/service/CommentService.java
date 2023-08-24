@@ -67,10 +67,13 @@ public class CommentService {
     }
 
     //[댓글 삭제]
-    public void deleteComment(Long boardId, Long id) {
+    public PostResponseCommentDto  deleteComment(Long boardId, Long id) {
         Comment comment = commentRepository.findByBoardIdAndId(boardId,id)
                 .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
-        commentRepository.delete(comment);
+
+            commentRepository.delete(comment);
+
+        return new PostResponseCommentDto(comment);
     }
 
     //[댓글 수정]
