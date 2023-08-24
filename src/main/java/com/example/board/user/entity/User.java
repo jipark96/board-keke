@@ -43,8 +43,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Comment> commentList = new ArrayList<Comment>();
-
-
+    
     @Builder
     public User(String username, String password, String auth) {
         this.username = username;

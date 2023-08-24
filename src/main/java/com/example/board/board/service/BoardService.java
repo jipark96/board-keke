@@ -167,24 +167,27 @@ public class BoardService {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals("boardView")) {
                     oldCookie = cookie;
+                    break;
                 }
             }
         }
 
-        if (oldCookie != null) {
-            if (!oldCookie.getValue().contains("[" + boardId.toString() + "]")) {
-               boardRepository.updateView(boardId);
-               oldCookie.setValue(oldCookie.getValue() + "_[" + boardId + "]");
-               oldCookie.setPath("/");
-               oldCookie.setMaxAge(60*60*24);
-               response.addCookie(oldCookie);
-            }
-        } else {
+        // 이미 쿠키가 존재하면서 해당 게시물을 조회하지 않았을 때만 조회수 증가
+        if (oldCookie == null || !oldCookie.getValue().contains("[" + boardId.toString() + "]")) {
             boardRepository.updateView(boardId);
-            Cookie newCookie = new Cookie("boardView", "[" + boardId + "]");
-            newCookie.setPath("/");
-            newCookie.setMaxAge(60*60*24);
-            response.addCookie(newCookie);
+
+            // 기존 쿠키를 업데이트하거나 새로운 쿠키를 생성
+            if (oldCookie != null) {
+                oldCookie.setValue(oldCookie.getValue() + "[" + boardId + "]");
+                oldCookie.setPath("/");
+                oldCookie.setMaxAge(60 * 60 * 24); // 1일
+                response.addCookie(oldCookie);
+            } else {
+                Cookie newCookie = new Cookie("boardView", "[" + boardId + "]");
+                newCookie.setPath("/");
+                newCookie.setMaxAge(60 * 60 * 24); // 1일
+                response.addCookie(newCookie);
+            }
         }
     }
 
