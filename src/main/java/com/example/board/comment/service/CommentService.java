@@ -71,6 +71,14 @@ public class CommentService {
         Comment comment = commentRepository.findByBoardIdAndId(boardId,id)
                 .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
 
+        // 대댓글도 함께 삭제
+        List<Comment> replies = comment.getReplies();
+        if (replies != null && !replies.isEmpty()) {
+            for (Comment reply : replies) {
+                commentRepository.delete(reply);
+            }
+        }
+
             commentRepository.delete(comment);
 
         return new PostResponseCommentDto(comment);
