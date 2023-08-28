@@ -1,0 +1,73 @@
+//[댓글 삭제]
+  const handleDeleteComment = async (commentId: number) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/board/${boardId}/comment/${commentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+        }
+      );
+      console.log(response.data);
+      // 삭제된 댓글을 상태에서 제거
+      const deletedComment = response.data.result;
+
+      if (deletedComment.parentCommentId) {
+        setComments((prevComments) =>
+          prevComments.filter((comment) => comment.id !== deletedComment.id)
+        );
+      } else if (deletedComment.replies.length === 0) {
+        setComments((prevComments) =>
+          prevComments.filter((comment) => comment.id !== deletedComment.id)
+        );
+      } else {
+        setComments((prevComments) =>
+          prevComments.map((comment) =>
+            comment.id === deletedComment.id
+              ? {
+                  ...comment,
+                  content: deletedComment.content,
+                  replies: deletedComment.replies,
+                }
+              : comment
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
+
+    public boolean hasReplies() {
+        return !replies.isEmpty();
+    }
+    public boolean checkIfAllRepliesDeleted() {
+        for (Comment reply : replies) {
+            if (!reply.getContent().equals("삭제된 댓글입니다.")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+   //[댓글 삭제]
+    public PostResponseCommentDto deleteComment(Long boardId, Long id) {
+        Comment comment = commentRepository.findByBoardIdAndId(boardId,id)
+                .orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+
+        if (comment.getParent() == null && comment.hasReplies()) {
+            comment.updateComment("삭제된 댓글입니다.");
+        } else {
+            // 대댓글 삭제
+            commentRepository.delete(comment);
+
+            // 부모 댓글 검사 및 삭제
+            Comment parentComment = comment.getParent();
+            if (parentComment != null && parentComment.checkIfAllRepliesDeleted()) {
+                parentComment.updateComment("삭제된 댓글입니다.");
+            }
+        }
+
+        return new PostResponseCommentDto(comment);
+    }

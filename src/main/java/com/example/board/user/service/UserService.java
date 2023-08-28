@@ -1,6 +1,10 @@
 package com.example.board.user.service;
 
+import com.example.board.board.entity.Board;
+import com.example.board.board.repository.BoardRepository;
 import com.example.board.common.exceptions.BaseException;
+import com.example.board.file.entity.File;
+import com.example.board.file.repository.FileRepository;
 import com.example.board.user.dto.*;
 import com.example.board.user.entity.User;
 import com.example.board.user.repository.UserRepository;
@@ -11,6 +15,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +32,8 @@ import static com.example.board.common.response.BaseResponseStatus.*;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
+    private final FileRepository fileRepository;
     private final JwtService jwtService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -86,6 +96,7 @@ public class UserService {
         // 활성화된 사용자 정보 조회 및 삭제 처리
         User user = userRepository.findByIdAndState(userId, ACTIVE)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
         user.deleteUser();
     }
 

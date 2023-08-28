@@ -102,6 +102,7 @@ public class User extends BaseEntity implements UserDetails {
 
     //[회원 탈퇴]
     public void deleteUser() {
+
         this.state = State.INACTIVE;
     }
 
