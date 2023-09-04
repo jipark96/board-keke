@@ -43,11 +43,15 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Comment> commentList = new ArrayList<Comment>();
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
     
     @Builder
     public User(String username, String password, String auth) {
         this.username = username;
         this.password = password;
+        this.role = Role.USER; // 기본 역할 설정
     }
 
     //[권한 반환]
@@ -105,5 +109,6 @@ public class User extends BaseEntity implements UserDetails {
 
         this.state = State.INACTIVE;
     }
+
 
 }

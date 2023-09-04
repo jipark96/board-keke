@@ -6,6 +6,7 @@ import com.example.board.common.exceptions.BaseException;
 import com.example.board.file.entity.File;
 import com.example.board.file.repository.FileRepository;
 import com.example.board.user.dto.*;
+import com.example.board.user.entity.Role;
 import com.example.board.user.entity.User;
 import com.example.board.user.repository.UserRepository;
 import com.example.board.utils.JwtService;

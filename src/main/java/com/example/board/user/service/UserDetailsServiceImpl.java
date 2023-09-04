@@ -23,9 +23,4 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new IllegalArgumentException(username));
     }
 
-    public User getAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = (String) authentication.getPrincipal();
-        return userRepository.findByUsername(username);
-    }
 }
