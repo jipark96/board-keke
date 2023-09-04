@@ -4,6 +4,7 @@ import com.example.board.board.entity.Board;
 import com.example.board.comment.dto.PostResponseCommentDto;
 import com.example.board.file.dto.FileGetDto;
 import com.example.board.file.entity.File;
+import com.example.board.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,8 +36,12 @@ public class GetBoardDto {
         this.title = board.getTitle();
         this.content = board.getContent();
         this.view = board.getView();
-        this.username = board.getUser().getUsername();
-        this.userId = board.getUser().getId();
+
+        User user = board.getUser();
+        if (user != null) {
+            this.username = user.getUsername();
+            this.userId = user.getId();
+        }
         this.createdAt = board.getCreatedAt();
         this.commentList = board.getCommentList().stream().map(PostResponseCommentDto::new).collect(Collectors.toList());
 

@@ -36,7 +36,6 @@ public class BoardController {
         boardService.createBoard(postBoardDto, username);
         return new BaseResponse<>("글쓰기 완료");
     }
-
     /**
      * 게시판 글 리스트 조회 API
      *  [GET] /board?page=0&size=8&keyword=검색어

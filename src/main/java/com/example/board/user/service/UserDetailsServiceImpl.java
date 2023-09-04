@@ -4,6 +4,8 @@ import com.example.board.common.entity.BaseEntity;
 import com.example.board.user.entity.User;
 import com.example.board.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
@@ -19,5 +21,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public User loadUserByUsername(String username) {
         return userRepository.findByUsernameAndState(username, BaseEntity.State.ACTIVE)
                 .orElseThrow(() -> new IllegalArgumentException(username));
+    }
+
+    public User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = (String) authentication.getPrincipal();
+        return userRepository.findByUsername(username);
     }
 }

@@ -10,6 +10,7 @@ import com.example.board.file.entity.File;
 import com.example.board.file.repository.FileRepository;
 import com.example.board.user.entity.User;
 import com.example.board.user.repository.UserRepository;
+import com.example.board.user.service.UserDetailsServiceImpl;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,6 +40,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final FileRepository fileRepository;
+    private final UserDetailsServiceImpl userDetailsService;
 
 
     //[글 생성]
@@ -49,6 +51,7 @@ public class BoardService {
         postBoardDto.setUser(user);
         Board board = postBoardDto.toEntity();
         boardRepository.save(board);
+
 
         // 파일을 저장하고 File 엔티티 생성 후 Board와 연결
         List<MultipartFile> files = postBoardDto.getFiles();
@@ -108,7 +111,6 @@ public class BoardService {
 
         return new GetBoardListResponseDto(getBoardDtoList, totalCount);
     }
-
 
     //[글 상세 조회]
     @Transactional(readOnly = true)
