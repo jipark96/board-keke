@@ -93,8 +93,17 @@ public class BoardService {
 
     //[글 전체 조회]
     @Transactional(readOnly = true)
-    public GetBoardListResponseDto getAllBoard(int page, int size, String keyword) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC,"id"));
+    public GetBoardListResponseDto getAllBoard(int page, int size, String keyword, String sortType) {
+        Sort sort;
+        if (sortType.equals("id")) {
+            sort = Sort.by(Sort.Direction.DESC,"id");
+        } else if (sortType.equals("view")) {
+            sort = Sort.by(Sort.Direction.DESC,"view");
+        } else { // 기본 정렬은 id 최신순
+            sort = Sort.by(Sort.Direction.DESC, "id");
+        }
+
+        Pageable pageable = PageRequest.of(page, size, sort);
         Page<Board> boardPage;
 
         int totalCount;

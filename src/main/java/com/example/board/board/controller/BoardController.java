@@ -45,8 +45,9 @@ public class BoardController {
     @GetMapping("")
     public BaseResponse<GetBoardListResponseDto> getAllBoard(@RequestParam int page,
                                                              @RequestParam int size,
-                                                             @RequestParam(required = false) String keyword) {
-        GetBoardListResponseDto getBoardListResponseDto = boardService.getAllBoard(page, size, keyword);
+                                                             @RequestParam(required = false) String keyword,
+                                                             @RequestParam(required = false) String sortType) {
+        GetBoardListResponseDto getBoardListResponseDto = boardService.getAllBoard(page, size, keyword, sortType);
 
         return new BaseResponse<>(getBoardListResponseDto);
     }
