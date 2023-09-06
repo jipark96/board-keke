@@ -25,6 +25,7 @@ public class GetBoardDto {
     private String content;
     private String username;
     private int view;
+    private int likeCount;
     private Long userId;
     private LocalDateTime createdAt;
     private List<PostResponseCommentDto> commentList;
@@ -36,6 +37,7 @@ public class GetBoardDto {
         this.title = board.getTitle();
         this.content = board.getContent();
         this.view = board.getView();
+        this.likeCount = board.getLikeCount();
 
         User user = board.getUser();
         if (user != null) {

@@ -4,6 +4,7 @@ import com.example.board.board.entity.Board;
 import com.example.board.comment.entity.Comment;
 import com.example.board.common.entity.BaseEntity;
 
+import com.example.board.like.entity.Like;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

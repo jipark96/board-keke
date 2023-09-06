@@ -3,6 +3,7 @@ package com.example.board.board.entity;
 import com.example.board.comment.entity.Comment;
 import com.example.board.common.entity.BaseEntity;
 import com.example.board.file.entity.File;
+import com.example.board.like.entity.Like;
 import com.example.board.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,6 +30,7 @@ public class Board extends BaseEntity {
     private String title;
 
     @Column(name = "board_content", nullable = false)
+    @Lob
     private String content;
 
     @Column
@@ -37,6 +39,8 @@ public class Board extends BaseEntity {
     @Column(columnDefinition = "integer default 0", nullable = false)
     private int view;
 
+    @Column(columnDefinition = "integer default 0", nullable = false)
+    private int likeCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -47,7 +51,6 @@ public class Board extends BaseEntity {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<File> fileList = new ArrayList<>();
-
 
     public void setUser(User user) {
         this.user = user;
@@ -69,5 +72,12 @@ public class Board extends BaseEntity {
     }
     public List<File> getFileList() {
         return this.fileList;
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount += 1;
+    }
+    public void decreaseLikeCount() {
+        this.likeCount -= 1;
     }
 }
