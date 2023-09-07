@@ -46,6 +46,18 @@ public class UserController {
     }
 
     /**
+     * 아이디 중복 확인 API
+     * [GET] /user/check/{username}
+     */
+    @ResponseBody
+    @Operation(summary = "아이디 중복 확인")
+    @GetMapping("/check/{username}")
+    public BaseResponse<Boolean> checkUsername(@PathVariable("username") String username) {
+        boolean exists = userService.isUsernameExists(username);
+        return new BaseResponse<>(exists);
+    }
+
+    /**
      * 회원조회 API
      * [GET] /user
      */

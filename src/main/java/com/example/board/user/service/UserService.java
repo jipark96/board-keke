@@ -65,6 +65,11 @@ public class UserService {
                 .build();
     }
 
+    //[아이디 중복 확인]
+    public boolean isUsernameExists(String username) {
+        return userRepository.findByUsernameAndState(username, ACTIVE).isPresent();
+    }
+
     //[회원 조회]
     @Transactional(readOnly = true)
     public List<GetUserDto> getUsers() {
