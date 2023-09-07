@@ -14,5 +14,5 @@ import java.util.List;
 @AllArgsConstructor
 public class GetBoardListResponseDto {
     private List<GetBoardDto> boardList;
-    private int totalCount;
+    private long totalCount;
 }

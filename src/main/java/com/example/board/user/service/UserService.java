@@ -1,5 +1,7 @@
 package com.example.board.user.service;
 
+import com.example.board.board.dto.GetBoardDto;
+import com.example.board.board.dto.GetBoardListResponseDto;
 import com.example.board.board.entity.Board;
 import com.example.board.board.repository.BoardRepository;
 import com.example.board.common.exceptions.BaseException;
@@ -12,6 +14,10 @@ import com.example.board.user.repository.UserRepository;
 import com.example.board.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,4 +132,36 @@ public class UserService {
                 user.getPassword()
         );
     }
+
+    //[자기 글 리스트 조회]
+    public GetBoardListResponseDto getUserBoard(Long userId, int page, int size, String keyword, String sortType) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        Sort sort;
+
+        if (sortType.equals("id")) {
+            sort = Sort.by(Sort.Direction.DESC,"id");
+        } else if (sortType.equals("view")) {
+            sort = Sort.by(Sort.Direction.DESC,"view");
+        } else { // 기본 정렬은 id 최신순
+            sort = Sort.by(Sort.Direction.DESC, "id");
+        }
+
+        Pageable pageable = PageRequest.of(page,size, sort);
+        Page<Board> boardPage;
+
+        if (keyword == null) {
+            boardPage = boardRepository.findByUserId(userId, pageable);
+        } else {
+            boardPage = boardRepository.findByUserIdAndTitleContaining(userId, keyword, pageable);
+        }
+
+        List<GetBoardDto> getBoardDtoList = boardPage.get().map(GetBoardDto::new).collect(Collectors.toList());
+
+        long totalCount = boardPage.getTotalElements();
+
+        return new GetBoardListResponseDto(getBoardDtoList, totalCount);
+    }
+
 }

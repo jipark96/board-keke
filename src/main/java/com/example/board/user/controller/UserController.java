@@ -3,6 +3,7 @@ package com.example.board.user.controller;
 import static com.example.board.common.response.BaseResponseStatus.*;
 import static com.example.board.utils.ValidationRegex.*;
 
+import com.example.board.board.dto.GetBoardListResponseDto;
 import com.example.board.common.response.BaseResponse;
 import com.example.board.user.dto.*;
 import com.example.board.user.service.UserService;
@@ -108,4 +109,21 @@ public class UserController {
         userService.modifyUser(userId, patchUserDto);
         return new BaseResponse<>(patchUserDto);
     }
+
+    /**
+     * 자기 글 리스트 조회
+     * [GET] /{userId}/board
+     */
+    @ResponseBody
+    @Operation(summary = "자기 글 리스트 조회")
+    @GetMapping("/{userId}/board")
+    public BaseResponse<GetBoardListResponseDto> getUserBoard(@PathVariable Long userId,
+                                                              @RequestParam int page,
+                                                              @RequestParam int size,
+                                                              @RequestParam(required = false) String keyword,
+                                                              @RequestParam(required = false) String sortType) {
+        GetBoardListResponseDto boards = userService.getUserBoard(userId, page, size, keyword, sortType);
+        return new BaseResponse<>(boards);
+    }
+
 }
