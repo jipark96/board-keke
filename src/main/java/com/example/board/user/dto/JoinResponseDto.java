@@ -14,6 +14,7 @@ public class JoinResponseDto {
     private String username;
     private String name;
     private String jwtToken;
+    private String role;
 
     public static JoinResponseDto of (User user){
         return JoinResponseDto
@@ -22,6 +23,7 @@ public class JoinResponseDto {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .name(user.getName())
+                .role(user.getRole().name())
                 .build();
     }
 

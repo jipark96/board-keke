@@ -20,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 public class User extends BaseEntity implements UserDetails {
 
     @Id
@@ -58,7 +59,7 @@ public class User extends BaseEntity implements UserDetails {
     //[권한 반환]
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("user"));
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
     //[사용자의 id 반환(고유한 값)]

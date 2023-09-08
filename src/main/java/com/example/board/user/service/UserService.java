@@ -13,7 +13,6 @@ import com.example.board.user.entity.User;
 import com.example.board.user.repository.UserRepository;
 import com.example.board.utils.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,10 +21,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,8 +48,12 @@ public class UserService {
             throw new BaseException(POST_USERS_EXISTS_USERNAME);
         }
 
-        User saveUser = userRepository.save(joinRequestDto.toEntity(bCryptPasswordEncoder));
+        User userToSave = joinRequestDto.toEntity(bCryptPasswordEncoder);
+        userToSave.setRole(Role.USER);
+
+        User saveUser = userRepository.save(userToSave);
         String jwtToken = jwtService.createJwt(saveUser.getId());
+
 
         return JoinResponseDto.builder()
                 .id(saveUser.getId())
@@ -62,6 +61,27 @@ public class UserService {
                 .username(saveUser.getUsername())
                 .name(saveUser.getName())
                 .jwtToken(jwtToken)
+                .role(saveUser.getRole().name())
+                .build();
+    }
+
+    //[관리자 아이디 생성]
+    public JoinResponseDto createAdmin(JoinRequestDto joinRequestDto) {
+
+        User userToSave = joinRequestDto.toEntity(bCryptPasswordEncoder);
+        userToSave.setRole(Role.ADMIN);
+
+        User saveUser = userRepository.save(userToSave);
+        String jwtToken = jwtService.createJwt(saveUser.getId());
+
+
+        return JoinResponseDto.builder()
+                .id(saveUser.getId())
+                .email(saveUser.getEmail())
+                .username(saveUser.getUsername())
+                .name(saveUser.getName())
+                .jwtToken(jwtToken)
+                .role(saveUser.getRole().name())
                 .build();
     }
 
@@ -99,6 +119,7 @@ public class UserService {
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .jwtToken(jwtToken)
+                .role(user.getRole().name())
                 .build();
     }
 
@@ -138,7 +159,7 @@ public class UserService {
         );
     }
 
-    //[자기 글 리스트 조회]
+    //[내 글 리스트 조회]
     public GetBoardListResponseDto getUserBoard(Long userId, int page, int size, String keyword, String sortType) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));

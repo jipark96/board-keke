@@ -46,6 +46,25 @@ public class UserController {
     }
 
     /**
+     * 관리자 생성 API
+     * [POST] /user/admin
+     */
+    @ResponseBody
+    @Operation(summary = "관리자 생성")
+    @PostMapping("/admin")
+    public BaseResponse<JoinResponseDto> createAdmin(@RequestBody JoinRequestDto joinRequestDto) {
+        if(joinRequestDto.getEmail() == null) {
+            return new BaseResponse<>(USERS_EMPTY_EMAIL);
+        }
+        if(!isRegexEmail(joinRequestDto.getEmail())) {
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
+        JoinResponseDto joinResponseDto = userService.createAdmin(joinRequestDto);
+        return new BaseResponse<>(joinResponseDto);
+
+    }
+
+    /**
      * 아이디 중복 확인 API
      * [GET] /user/check/{username}
      */

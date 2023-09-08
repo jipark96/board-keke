@@ -43,6 +43,7 @@ public class SecurityConfig  {
                .build(); // SecurityFilterChain 구성 및 반환
    }
 
+
    //[인증 관리자 관련 설정]
    @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() throws Exception {
