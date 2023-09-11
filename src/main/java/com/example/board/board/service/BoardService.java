@@ -1,5 +1,7 @@
 package com.example.board.board.service;
 
+import com.example.board.Image.entity.Image;
+import com.example.board.Image.repository.ImageRepository;
 import com.example.board.board.dto.GetBoardDto;
 import com.example.board.board.dto.GetBoardListResponseDto;
 import com.example.board.board.dto.PatchBoardDto;
@@ -40,8 +42,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final FileRepository fileRepository;
-    private final UserDetailsServiceImpl userDetailsService;
-
+    private final ImageRepository imageRepository;
 
     //[글 생성]
     @Transactional
@@ -87,6 +88,37 @@ public class BoardService {
             }
         }
 
+        // 이미지 파일 업로드
+        List<MultipartFile> images = postBoardDto.getImages();
+        if (images != null && !images.isEmpty()) {
+            String imagePath = "src/main/resources/uploadedImages";
+
+            for (MultipartFile image : images) {
+                if (!image.isEmpty()) {
+                    String imageName = StringUtils.cleanPath(image.getOriginalFilename());
+
+                    // 실제 파일 저장 코드
+                    try {
+                        // 1. 파일 저장 경로 설정
+                        Path targetPath = Paths.get(imagePath).resolve(imageName);
+
+                        // 2. 파일 저장
+                        Files.copy(image.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new IllegalArgumentException("이미지를 저장하는 과정에서 문제가 발생하였습니다.");
+                    }
+
+                    Image newImage = Image.builder()
+                            .imageUrl("/uploadedImages/" + imageName)
+                            .imageName(imageName)
+                            .board(board)
+                            .build();
+
+                    imageRepository.save(newImage);
+                }
+            }
+        }
 
         return board.getId();
     }
@@ -160,12 +192,6 @@ public class BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("게시물이 존재하지 않습니다."));
         boardRepository.delete(board);
     }
-
-    //[조회수 증가]
-//    @Transactional
-//    public int updateView(Long boardId) {
-//        return boardRepository.updateView(boardId);
-//    }
 
 
 

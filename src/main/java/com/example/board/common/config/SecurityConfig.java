@@ -34,15 +34,13 @@ public class SecurityConfig  {
        return http
                .cors()
                .and()
+               .csrf().disable() // CSRF 보호 비활성화
                .authorizeHttpRequests()
                .requestMatchers("/**").permitAll() // 모든 요청 허용
-               .requestMatchers("/admin/**").hasRole("ADMIN")
                .anyRequest().authenticated() // 나머지 요청에는 인증이 필요함
                .and()
-               .csrf().disable() // CSRF 보호 비활성화
                .build(); // SecurityFilterChain 구성 및 반환
    }
-
 
    //[인증 관리자 관련 설정]
    @Bean

@@ -20,6 +20,7 @@ public class PostBoardDto {
     private int view;
     private User user;
     private List<MultipartFile> files;
+    private List<MultipartFile> images;
     public Board toEntity() {
         return Board.builder()
                 .title(title)

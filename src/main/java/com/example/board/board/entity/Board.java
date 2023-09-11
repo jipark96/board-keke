@@ -1,5 +1,6 @@
 package com.example.board.board.entity;
 
+import com.example.board.Image.entity.Image;
 import com.example.board.comment.entity.Comment;
 import com.example.board.common.entity.BaseEntity;
 import com.example.board.file.entity.File;
@@ -29,8 +30,7 @@ public class Board extends BaseEntity {
     @Column(name = "board_title", nullable = false, length = 45)
     private String title;
 
-    @Column(name = "board_content", nullable = false)
-    @Lob
+    @Column(name = "board_content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
     @Column
@@ -51,6 +51,9 @@ public class Board extends BaseEntity {
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<File> fileList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Image> imageList = new ArrayList<>();
 
     public void setUser(User user) {
         this.user = user;

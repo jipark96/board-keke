@@ -1,5 +1,6 @@
 package com.example.board.board.dto;
 
+import com.example.board.Image.dto.ImageGetDto;
 import com.example.board.board.entity.Board;
 import com.example.board.comment.dto.PostResponseCommentDto;
 import com.example.board.file.dto.FileGetDto;
@@ -31,6 +32,8 @@ public class GetBoardDto {
     private List<PostResponseCommentDto> commentList;
     private List<FileGetDto> fileList;
 
+    private List<ImageGetDto> imageList;
+
 
     public GetBoardDto(Board board) {
         this.id = board.getId();
@@ -50,6 +53,10 @@ public class GetBoardDto {
         this.fileList = board.getFileList().stream() // 게시물의 파일 리스트를 가져옴
                 .map(FileGetDto::new) // FileGetDto로 변환
                 .collect(Collectors.toList()); // List로 반환
+
+        this.imageList = board.getImageList().stream()
+                .map(ImageGetDto::new)
+                .collect(Collectors.toList());
     }
 
 }
