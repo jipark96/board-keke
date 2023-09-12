@@ -4,6 +4,8 @@ import com.example.board.board.dto.GetBoardDto;
 import com.example.board.board.dto.GetBoardListResponseDto;
 import com.example.board.board.entity.Board;
 import com.example.board.board.repository.BoardRepository;
+import com.example.board.comment.entity.Comment;
+import com.example.board.comment.repository.CommentRepository;
 import com.example.board.common.exceptions.BaseException;
 import com.example.board.file.entity.File;
 import com.example.board.file.repository.FileRepository;
@@ -35,6 +37,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
     private final FileRepository fileRepository;
     private final JwtService jwtService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -188,6 +191,29 @@ public class UserService {
         long totalCount = boardPage.getTotalElements();
 
         return new GetBoardListResponseDto(getBoardDtoList, totalCount);
+    }
+
+    //[내가 쓴 댓글 게시글 조회]
+    public GetBoardListResponseDto getUserCommentBoard(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+
+        // 사용자가 작성한 모든 댓글 가져오기
+        List<Comment> userComments = commentRepository.findByUserId(userId);
+
+        // 각각의 댓글이 속한 게시물 ID 추출
+        List<Long> boardIds = userComments.stream()
+                .map(comment -> comment.getBoard().getId())
+                .distinct() // 중복 제거
+                .collect(Collectors.toList());
+
+        //추출된 ID로 게시물 가져오기
+        List<Board> boardList = boardRepository.findByIdIn(boardIds);
+
+        List<GetBoardDto> getBoardDtoList = boardList.stream().map(GetBoardDto::new).collect(Collectors.toList());
+
+        return new GetBoardListResponseDto(getBoardDtoList, getBoardDtoList.size());
+
     }
 
 }

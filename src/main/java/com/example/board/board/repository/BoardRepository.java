@@ -28,4 +28,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findByUserId(Long userId, Pageable pageable);
     Page<Board> findByUserIdAndTitleContaining(Long userId, String keyword, Pageable pageable);
 
+    List<Board> findByIdIn(List<Long> ids);
+
 }

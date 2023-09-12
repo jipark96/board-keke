@@ -157,4 +157,15 @@ public class UserController {
         return new BaseResponse<>(boards);
     }
 
+    /**
+     * 내가 쓴 댓글이 달린 게시글 조회
+     * [GET] /user/{userId}/comment/board
+     */
+    @ResponseBody
+    @Operation(summary = "내가 쓴 댓글이 달린 게시글 조회")
+    @GetMapping("/{userId}/comment/board")
+    public BaseResponse<GetBoardListResponseDto> getUserCommentBoard(@PathVariable Long userId) {
+        GetBoardListResponseDto boards = userService.getUserCommentBoard(userId);
+        return new BaseResponse<>(boards);
+    }
 }
