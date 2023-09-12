@@ -73,8 +73,10 @@ public class BoardController {
     @Operation(summary = "글 수정")
     @PatchMapping("/edit/{boardId}")
     public BaseResponse<PatchBoardDto> updateBoard(@PathVariable("boardId") Long boardId, @ModelAttribute PatchBoardDto patchBoardDto) {
-        if (patchBoardDto.getDeleted() == null) {
-            patchBoardDto.setDeleted(new ArrayList<>());
+        if (patchBoardDto.getDeletedFiles() == null) {
+            patchBoardDto.setDeletedFiles(new ArrayList<>());
+        } else if (patchBoardDto.getDeletedImages() == null) {
+            patchBoardDto.setDeletedImages(new ArrayList<>());
         }
         boardService.updateBoard(boardId, patchBoardDto);
         return new BaseResponse<>(patchBoardDto);

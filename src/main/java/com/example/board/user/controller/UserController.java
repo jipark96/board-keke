@@ -168,4 +168,5 @@ public class UserController {
         GetBoardListResponseDto boards = userService.getUserCommentBoard(userId);
         return new BaseResponse<>(boards);
     }
+
 }

@@ -1,10 +1,7 @@
 package com.example.board.utils;
 
 import com.example.board.common.exceptions.BaseException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,8 +19,67 @@ import static com.example.board.common.response.BaseResponseStatus.INVALID_JWT;
 @Service
 public class JwtService {
 
+//    public static final Long REFRESH_TOKEN_EXPIRE_TIME = 24 * 60 * 60 * 1000L;
+//    public static final Long ACCESS_TOKEN_EXPIRE_TIME = 15 * 60 * 1000L;
+
     @Value("${jwt.secret.key}")
     private String JWT_SECRET_KEY;
+
+//    public String generateAccessToken(String subject) {
+//        return Jwts.builder()
+//                .setSubject(subject)
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME))
+//                .signWith(SignatureAlgorithm.HS256, JWT_SECRET_KEY.getBytes())
+//                .compact();
+//    }
+//
+//    public String generateRefreshToken(String subject) {
+//        return Jwts.builder()
+//                .setSubject(subject)
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_TIME))
+//                .signWith(SignatureAlgorithm.HS256, JWT_SECRET_KEY.getBytes())
+//                .compact();
+//    }
+//
+//    public String getSubjectFromToken(String token) {
+//        Claims claims;
+//        try {
+//            claims = Jwts.parser().setSigningKey(JWT_SECRET_KEY.getBytes()).parseClaimsJws(token).getBody();
+//        } catch (ExpiredJwtException e) {
+//            throw new BaseException(INVALID_JWT);
+//        } catch (Exception e) {
+//            throw new BaseException(INVALID_JWT);
+//        }
+//        return claims.getSubject();
+//    }
+//
+//    public String refreshAccessToken(String refreshToken) {
+//        String subject = getSubjectFromToken(refreshToken);
+//        return generateAccessToken(subject);
+//    }
+//
+//    public String extractAccessToken(String authorization) {
+//        return authorization.substring("Bearer ".length());
+//    }
+//
+//    public Date getExpirationFromToken(String token) {
+//        Claims claims;
+//        try {
+//            claims = Jwts.parser().setSigningKey(JWT_SECRET_KEY.getBytes()).parseClaimsJws(token).getBody();
+//        } catch (ExpiredJwtException e) {
+//            throw new BaseException(INVALID_JWT);
+//        } catch (Exception e) {
+//            throw new BaseException(INVALID_JWT);
+//        }
+//        return claims.getExpiration();
+//    }
+//}
+
+
+
+
 
     // JWT 시크릿 키를 바이트 배열로 변환하여 Key 객체로 생성
     private Key generateKey() {

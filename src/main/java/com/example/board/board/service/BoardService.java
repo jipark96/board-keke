@@ -168,22 +168,29 @@ public class BoardService {
 
         board.updateBoard(patchBoardDto.getTitle(), patchBoardDto.getContent());
 
-        List<String> deletedFiles = patchBoardDto.getDeleted();
+        List<String> deletedFiles = patchBoardDto.getDeletedFiles();
 
         // 불필요한 대괄호 제거
         if (deletedFiles != null && !deletedFiles.isEmpty()) {
             deletedFiles = deletedFiles.stream()
                     .map(file -> file.replace("\"", "").replace("[", "").replace("]", ""))
                     .collect(Collectors.toList());
-            patchBoardDto.setDeleted(deletedFiles);
+            patchBoardDto.setDeletedFiles(deletedFiles);
         } else {
-            patchBoardDto.setDeleted(new ArrayList<>());
+            patchBoardDto.setDeletedFiles(new ArrayList<>());
         }
 
         deleteFiles(deletedFiles);
 
         List<MultipartFile> files = patchBoardDto.getFiles();
         saveFiles(board, files);
+
+        List<String> deletedImages = patchBoardDto.getDeletedImages();
+        if (deletedImages != null && !deletedImages.isEmpty()) {
+            deleteImages(deletedImages);
+        }
+        List<MultipartFile> images = patchBoardDto.getImages();
+        saveImages(board, images);
     }
 
     //[글 삭제]
@@ -291,4 +298,57 @@ public class BoardService {
             }
         }
     }
+
+    //[이미지 수정 삭제]
+    private void deleteImages(List<String> deletedImages) {
+        if (deletedImages != null && !deletedImages.isEmpty()) {
+            String imagePath = "src/main/resources/uploadedImages";
+
+            for (String imageName : deletedImages) {
+                try {
+                    imageName = imageName.replace("\"", "");
+
+                    Path targetPath = Paths.get(imagePath).resolve(imageName);
+
+                    Files.deleteIfExists(targetPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new IllegalArgumentException("이미지를 삭제하는 과정에서 문제가 발생하였습니다.");
+                }
+                imageRepository.deleteByImageName(imageName);
+            }
+        }
+    }
+
+    //[이미지 수정 저장]
+    private void saveImages(Board board, List<MultipartFile> images) {
+        if (images != null && !images.isEmpty()) {
+            String imagePath = "src/main/resources/uploadedImages";
+
+            for (MultipartFile image : images) {
+                if (!image.isEmpty()) {
+                    String imageName = StringUtils.cleanPath(image.getOriginalFilename());
+
+                    try {
+                        Path targetPath = Paths.get(imagePath).resolve(imageName);
+
+                        Files.copy(image.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+                        Image newImage = Image.builder()
+                                .imageUrl("/uploadedImages/" + imageName)
+                                .imageName(imageName)
+                                .board(board)
+                                .build();
+
+                        imageRepository.save(newImage);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new IllegalArgumentException("이미지를 저장하는 과정에서 문제가 발생하였습니다.");
+                    }
+                }
+            }
+        }
+    }
+
+
 }

@@ -18,8 +18,10 @@ public class PatchBoardDto {
 
     private String title;
     private String content;
-    private List<String> deleted; // 기존 첨부 파일 중 삭제할 파일 목록
-
+    private List<String> deletedFiles; // 기존 첨부 파일 중 삭제할 파일 목록
+    private List<String> deletedImages; // 기존 첨부 이미지 중 삭제할 이미지 목록
     @JsonIgnore
     private List<MultipartFile> files;
+    @JsonIgnore
+    private List<MultipartFile> images;
 }
