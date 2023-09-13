@@ -169,4 +169,15 @@ public class UserController {
         return new BaseResponse<>(boards);
     }
 
+    /**
+     * 좋아요 누른 게시글 조회
+     * [GET] /user/{userId}/like/board
+     */
+    @ResponseBody
+    @Operation(summary = "좋아요 누른 게시글 조회")
+    @GetMapping("/{userId}/like/board")
+    public BaseResponse<GetBoardListResponseDto> getLikeBoard(@PathVariable Long userId) {
+        GetBoardListResponseDto boards = userService.getLikedBoard(userId);
+        return new BaseResponse<>(boards);
+    }
 }
