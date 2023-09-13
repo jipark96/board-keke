@@ -186,9 +186,17 @@ public class BoardService {
         saveFiles(board, files);
 
         List<String> deletedImages = patchBoardDto.getDeletedImages();
+
         if (deletedImages != null && !deletedImages.isEmpty()) {
-            deleteImages(deletedImages);
+            deletedImages = deletedImages.stream()
+                    .map(image -> image.replace("\"", "").replace("[", "").replace("]", ""))
+                    .collect(Collectors.toList());
+            patchBoardDto.setDeletedImages(deletedImages);
+        } else {
+            patchBoardDto.setDeletedImages(new ArrayList<>());
         }
+        deleteImages(deletedImages);
+
         List<MultipartFile> images = patchBoardDto.getImages();
         saveImages(board, images);
     }
@@ -308,9 +316,12 @@ public class BoardService {
                 try {
                     imageName = imageName.replace("\"", "");
 
+                    imageName = imageName.replace("/uploadedImages/", "");
+
                     Path targetPath = Paths.get(imagePath).resolve(imageName);
 
                     Files.deleteIfExists(targetPath);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     throw new IllegalArgumentException("이미지를 삭제하는 과정에서 문제가 발생하였습니다.");
