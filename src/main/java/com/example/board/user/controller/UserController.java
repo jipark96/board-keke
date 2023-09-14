@@ -134,7 +134,7 @@ public class UserController {
     @ResponseBody
     @Operation(summary = "회원 정보 수정")
     @PatchMapping("edit/{userId}")
-    public BaseResponse<PatchUserDto> modifyUser(@PathVariable("userId") Long userId, @RequestBody PatchUserDto patchUserDto) {
+    public BaseResponse<PatchUserDto> modifyUser(@PathVariable("userId") Long userId, @ModelAttribute PatchUserDto patchUserDto) {
         Long jwtUserId = jwtService.getUserId();
 
         userService.modifyUser(userId, patchUserDto);

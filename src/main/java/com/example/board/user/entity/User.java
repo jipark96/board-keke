@@ -1,5 +1,6 @@
 package com.example.board.user.entity;
 
+import com.example.board.Image.entity.UserImage;
 import com.example.board.board.entity.Board;
 import com.example.board.comment.entity.Comment;
 import com.example.board.common.entity.BaseEntity;
@@ -45,6 +46,9 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     List<Comment> commentList = new ArrayList<Comment>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private UserImage userImage;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -95,10 +99,11 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     //[회원 수정]
-    public void updateNameAndPassword(String name, String email, String password) {
+    public void updateUserInfo(String name, String email, String password, UserImage userImage) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.userImage = userImage;
     }
 
     //[비밀번호 수정]

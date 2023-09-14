@@ -1,5 +1,7 @@
 package com.example.board.user.service;
 
+import com.example.board.Image.entity.UserImage;
+import com.example.board.Image.repository.ImageRepository;
 import com.example.board.board.dto.GetBoardDto;
 import com.example.board.board.dto.GetBoardListResponseDto;
 import com.example.board.board.entity.Board;
@@ -24,7 +26,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,6 +50,7 @@ public class UserService {
     private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
+
     private final JwtService jwtService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -157,11 +167,67 @@ public class UserService {
             user.updatePassword(bCryptPasswordEncoder.encode(newPassword));
         }
 
-        user.updateNameAndPassword(
+        // 프로필 이미지 업데이트 - 실제 파일 저장 후 URL 획득
+        MultipartFile image = patchUserDto.getImage();
+
+        if (image != null && !image.isEmpty()) {
+            String imagePath = "src/main/resources/uploadedImages";
+            String imageName = StringUtils.cleanPath(image.getOriginalFilename());
+
+            try {
+                Path targetPath = Paths.get(imagePath).resolve(imageName);
+                Files.copy(image.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+                UserImage userImage;
+
+                // 기존에 등록된 사진이 없으면 새로 추가
+                if (user.getUserImage() == null) {
+                    userImage = new UserImage();
+                    user.setUserImage(userImage);
+                } else {
+                    // 기존 사진이 있으면 갱신
+                    deleteUserimage(user.getUserImage().getImageName());
+
+                    userImage= user.getUserImage();
+                }
+
+                userImage.setImageUrl("/uploadedImages/" + imageName);
+                user.updateUserInfo(
+                        patchUserDto.getName(),
+                        patchUserDto.getEmail(),
+                        user.getPassword(),
+                        user.getUserImage()
+                );
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new IllegalArgumentException("이미지를 저장하는 과정에서 문제가 발생하였습니다.");
+            }
+        }
+
+        user.updateUserInfo(
                 patchUserDto.getName(),
                 patchUserDto.getEmail(),
-                user.getPassword()
+                user.getPassword(),
+                user.getUserImage()
         );
+    }
+
+    //[이미지 삭제]
+    private void deleteUserimage(String imageName) {
+        String imagePath = "src/main/resources/uploadedImages";
+
+        try {
+            imageName = imageName.replace("\"", "");
+            imageName = imageName.replace("/uploadedImages/", "");
+
+            Path targetPath = Paths.get(imagePath).resolve(imageName);
+
+            Files.deleteIfExists(targetPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("이미지를 삭제하는 과정에서 문제가 발생하였습니다.");
+        }
     }
 
     //[내 글 리스트 조회]
@@ -233,5 +299,4 @@ public class UserService {
 
         return new GetBoardListResponseDto(boardDtoList, boardDtoList.size());
     }
-
 }

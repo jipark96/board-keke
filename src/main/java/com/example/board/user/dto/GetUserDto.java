@@ -17,6 +17,8 @@ public class GetUserDto {
     private String username;
     private String password;
     private String name;
+    private String imageUrl;
+    private String imageName;
 
     public GetUserDto(User user)  {
         this.id = user.getId();
@@ -24,5 +26,9 @@ public class GetUserDto {
         this.username = user.getUsername();
         this.password=user.getPassword();
         this.name = user.getName();
+        if (user.getUserImage() != null) {
+            this.imageUrl = user.getUserImage().getImageUrl();
+            this.imageName = user.getUserImage().getImageName();
+        }
     }
 }
