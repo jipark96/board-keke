@@ -157,6 +157,7 @@ public class UserService {
     }
 
     //[회원 수정]
+    @Transactional
     public void modifyUser(Long userId, PatchUserDto patchUserDto) {
         User user = userRepository.findByIdAndState(userId, ACTIVE)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
@@ -184,6 +185,7 @@ public class UserService {
                 if (user.getUserImage() == null) {
                     userImage = new UserImage();
                     user.setUserImage(userImage);
+                    user.getUserImage().setUser(user);
                 } else {
                     // 기존 사진이 있으면 갱신
                     deleteUserimage(user.getUserImage().getImageName());
@@ -192,12 +194,6 @@ public class UserService {
                 }
 
                 userImage.setImageUrl("/uploadedImages/" + imageName);
-                user.updateUserInfo(
-                        patchUserDto.getName(),
-                        patchUserDto.getEmail(),
-                        user.getPassword(),
-                        user.getUserImage()
-                );
 
             } catch (IOException e) {
                 e.printStackTrace();
