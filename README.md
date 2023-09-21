@@ -69,16 +69,3 @@
 > 마이페이지 : 좋아요 글 조회, 내가 쓴 글 조회, 댓글 단 게시글 조회
 
 > 관리자 페이지 : 회원 관리, 게시글 관리
-
----
- ## Swagger
-
----
-![api1](https://github.com/jipark96/board-keke/assets/101976260/a82851be-b8e0-432f-a4d9-ae94abb9004f)
-![api2](https://github.com/jipark96/board-keke/assets/101976260/49988089-9f08-4dc3-a637-f7086bff247d)
----
-## 초기 ERD
-
----
-![erd1](https://github.com/jipark96/board-keke/assets/101976260/52097188-f17a-4477-8194-97f49f602aa9)
-
